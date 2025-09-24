@@ -40,11 +40,13 @@ export default function Home() {
       <div id="spotify-container">
         {track.isPlaying ? (
           <>
-            <img
-              src={track.albumArt}
-              alt="Album Art"
-              style={{ width: 150, height: 150, borderRadius: 8 }}
-            />
+            {track.albumArt && (
+              <img
+                src={track.albumArt}
+                alt="Album Art"
+                style={{ width: 150, height: 150, borderRadius: 8 }}
+              />
+            )}
             <h2>
               <a
                 href={track.url}
