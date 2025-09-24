@@ -1,67 +1,40 @@
 // lib/spotifyToken.ts
-// Helper to refresh / cache an access token using the stored refresh token.
-
-let cachedAccessToken: string | null = null;
-let tokenExpiresAt: number | null = null;
-let refreshToken: string | null = process.env.SPOTIFY_REFRESH_TOKEN ?? null;
-
-type TokenResponse = {
-  access_token?: string;
-  expires_in?: number;
-  refresh_token?: string;
-};
+let accessToken: string | null = null;
+let refreshToken: string | null = null;
+let tokenExpiry = 0;
 
 export async function refreshAccessToken(): Promise<string> {
-  // If we have a cached token that is still valid (10s safety margin), return it.
-  if (cachedAccessToken && tokenExpiresAt && Date.now() < tokenExpiresAt - 10000) {
-    return cachedAccessToken;
-  }
+  const clientId = process.env.SPOTIFY_CLIENT_ID!;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET!;
+  const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN!;
 
-  if (!refreshToken) {
-    throw new Error("Missing SPOTIFY_REFRESH_TOKEN in environment variables.");
-  }
+  const authString = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (!clientId || !clientSecret) {
-    throw new Error("Missing SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET in environment variables.");
-  }
-
-  const creds = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-
-  const res = await fetch("https://accounts.spotify.com/api/token", {
+  const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
-      Authorization: `Basic ${creds}`,
+      Authorization: `Basic ${authString}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
       grant_type: "refresh_token",
-      refresh_token: refreshToken,
+      refresh_token,
     }),
   });
 
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Failed to refresh Spotify token: ${res.status} ${txt}`);
+  if (!response.ok) {
+    throw new Error("Failed to refresh access token");
   }
 
-  const data = (await res.json()) as TokenResponse;
+  const data = await response.json();
 
-  const newAccess = data.access_token;
-  if (!newAccess) throw new Error("Spotify refresh response did not include access_token.");
+  accessToken = data.access_token;
+  tokenExpiry = Date.now() + data.expires_in * 1000;
 
-  // Cache and compute expiry
-  cachedAccessToken = newAccess;
-  tokenExpiresAt = Date.now() + ((data.expires_in ?? 3600) * 1000);
-
-  // Spotify may rotate the refresh token; update it in memory (do not write to disk or git)
+  // Only update refreshToken if Spotify returns a new one
   if (data.refresh_token) {
     refreshToken = data.refresh_token;
-    // NOTE: if Spotify returns a new refresh token and you want it persisted,
-    // copy it and update your Vercel env variable manually.
   }
 
-  // Return the fresh access token (definite string)
-  return newAccess;
+  return accessToken!;
 }

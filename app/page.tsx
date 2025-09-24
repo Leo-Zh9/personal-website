@@ -1,63 +1,78 @@
 "use client";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
+import "./globals.css";
+
+interface Track {
+  isPlaying: boolean;
+  title?: string;
+  artist?: string;
+  url?: string;
+  albumArt?: string;
+}
 
 export default function Home() {
+  const [track, setTrack] = useState<Track>({ isPlaying: false });
+
+  // Fetch current track from API
+  const getCurrentTrack = async () => {
+    try {
+      const res = await fetch("/api/current-track");
+      const data = await res.json();
+      setTrack(data);
+    } catch (err) {
+      console.error("Failed to fetch track:", err);
+    }
+  };
+
   useEffect(() => {
-    // Dynamically add CSS
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/style.css";
-    document.head.appendChild(link);
-
-    // Dynamically add JS
-    const script = document.createElement("script");
-    script.src = "/script.js";
-    script.async = true;
-    document.body.appendChild(script);
-
-    // Clean up on unmount
-    return () => {
-      document.head.removeChild(link);
-      document.body.removeChild(script);
-    };
+    getCurrentTrack(); // initial fetch
+    const interval = setInterval(getCurrentTrack, 10000); // every 10 seconds
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div>
-      {/* Spotify Track Info */}
-      <div
-        id="spotify-container"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          color: "white",
-          zIndex: 10, // ensure above canvas
-          textAlign: "center",
-          textShadow: "0 0 10px black",
-        }}
-      >
-        <div id="track-info">
-          <p id="track-name">Loading...</p>
-          <p id="track-artist"></p>
-          {/* Optional album image */}
-          {/* <img id="track-album" alt="Album Art" /> */}
-        </div>
+    <>
+      {/* Pulsing waves canvas */}
+      <canvas id="waveCanvas"></canvas>
+
+      {/* Spotify container */}
+      <div id="spotify-container">
+        {track.isPlaying ? (
+          <>
+            <img
+              src={track.albumArt}
+              alt="Album Art"
+              style={{ width: 150, height: 150, borderRadius: 8 }}
+            />
+            <h2>
+              <a
+                href={track.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                {track.title}
+              </a>
+            </h2>
+            <h3>
+              <a
+                href={track.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                {track.artist}
+              </a>
+            </h3>
+          </>
+        ) : (
+          <h2>Nothing here</h2>
+        )}
       </div>
 
-      {/* Canvas for pulsing waves */}
-      <canvas
-        id="waveCanvas"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          zIndex: 0,
-        }}
-      ></canvas>
-    </div>
+      {/* Include your script.js */}
+      <script src="/script.js"></script>
+    </>
   );
 }
