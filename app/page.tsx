@@ -1,80 +1,67 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import "./globals.css";
+import { useEffect, useState } from 'react';
+import './style.css';
 
 interface Track {
-  isPlaying: boolean;
-  title?: string;
-  artist?: string;
-  url?: string;
-  albumArt?: string;
+  name: string;
+  artists: { name: string }[];
+  album: { images: { url: string }[] };
 }
 
-export default function Home() {
-  const [track, setTrack] = useState<Track>({ isPlaying: false });
+export default function HomePage() {
+  const [track, setTrack] = useState<Track | null>(null);
 
-  const getCurrentTrack = async () => {
+  // Fetch currently playing track from API
+  async function fetchTrack() {
     try {
-      const res = await fetch("/api/current-track");
+      const res = await fetch('/api/current-track');
       const data = await res.json();
-      console.log("Fetched track:", data); // debug
-      setTrack(data);
-    } catch (err) {
-      console.error("Failed to fetch track:", err);
-    }
-  };
 
+      if (!data.error && data.item) {
+        setTrack(data.item);
+      } else {
+        setTrack(null);
+      }
+    } catch (err) {
+      console.error('Error fetching Spotify track:', err);
+      setTrack(null);
+    }
+  }
+
+  // Fetch track on mount and every 10 seconds
   useEffect(() => {
-    getCurrentTrack();
-    const interval = setInterval(getCurrentTrack, 10000); // refresh every 10s
+    fetchTrack();
+    const interval = setInterval(fetchTrack, 10000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <>
-      {/* Pulsing waves background */}
+      {/* Canvas for pulsing waves */}
       <canvas id="waveCanvas"></canvas>
 
-      {/* Spotify container */}
+      {/* Spotify track info */}
       <div id="spotify-container">
-        {track.isPlaying ? (
+        {track ? (
           <>
-            {track.albumArt && (
-              <img
-                src={track.albumArt}
-                alt="Album Art"
-                style={{ width: 150, height: 150, borderRadius: 8 }}
-              />
-            )}
-            <h2>
-              <a
-                href={track.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                {track.title}
-              </a>
-            </h2>
-            <h3>
-              <a
-                href={track.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                {track.artist}
-              </a>
+            <img
+              src={track.album.images[0].url}
+              alt={track.name}
+              style={{ width: 150, height: 150 }}
+            />
+            <h2 id="track-name">{track.name}</h2>
+            <h3 id="track-artist">
+              {track.artists.map(a => a.name).join(', ')}
             </h3>
           </>
         ) : (
-          <h2>Nothing here</h2>
+          <h2>No track playing</h2>
         )}
       </div>
 
-      {/* Waves animation script */}
-      <script src="/script.js"></script>
+      {/* Include your waves script */}
+      <script src="./script.js"></script>
     </>
   );
 }
