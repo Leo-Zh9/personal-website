@@ -1,36 +1,30 @@
 // lib/spotifyToken.ts
-export const runtime = "nodejs";
+// Helper to refresh / cache an access token using the stored refresh token.
 
 let cachedAccessToken: string | null = null;
 let tokenExpiresAt: number | null = null;
 let refreshToken: string | null = process.env.SPOTIFY_REFRESH_TOKEN ?? null;
 
 type TokenResponse = {
-  access_token: string;
-  token_type?: string;
+  access_token?: string;
   expires_in?: number;
   refresh_token?: string;
-  scope?: string;
 };
 
-/**
- * Refresh (or obtain) an access token using the stored refresh token.
- * Returns a string (the access token).
- */
 export async function refreshAccessToken(): Promise<string> {
-  // If we have a cached token and it's still valid (with a small margin), return it.
+  // If we have a cached token that is still valid (10s safety margin), return it.
   if (cachedAccessToken && tokenExpiresAt && Date.now() < tokenExpiresAt - 10000) {
     return cachedAccessToken;
   }
 
   if (!refreshToken) {
-    throw new Error("Missing SPOTIFY_REFRESH_TOKEN environment variable.");
+    throw new Error("Missing SPOTIFY_REFRESH_TOKEN in environment variables.");
   }
 
-  const clientId = process.env.SPOTIFY_CLIENT_ID!;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET!;
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   if (!clientId || !clientSecret) {
-    throw new Error("Missing SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET environment variables.");
+    throw new Error("Missing SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET in environment variables.");
   }
 
   const creds = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
@@ -44,7 +38,7 @@ export async function refreshAccessToken(): Promise<string> {
     body: new URLSearchParams({
       grant_type: "refresh_token",
       refresh_token: refreshToken,
-    }).toString(),
+    }),
   });
 
   if (!res.ok) {
@@ -54,21 +48,20 @@ export async function refreshAccessToken(): Promise<string> {
 
   const data = (await res.json()) as TokenResponse;
 
-  if (!data.access_token) {
-    throw new Error("Spotify response did not include an access_token.");
-  }
+  const newAccess = data.access_token;
+  if (!newAccess) throw new Error("Spotify refresh response did not include access_token.");
 
-  // Cache the token and expiry time
-  cachedAccessToken = data.access_token;
-  tokenExpiresAt = Date.now() + (data.expires_in ?? 3600) * 1000;
+  // Cache and compute expiry
+  cachedAccessToken = newAccess;
+  tokenExpiresAt = Date.now() + ((data.expires_in ?? 3600) * 1000);
 
-  // Spotify may return a new refresh token; if so, update the in-memory value.
+  // Spotify may rotate the refresh token; update it in memory (do not write to disk or git)
   if (data.refresh_token) {
     refreshToken = data.refresh_token;
-    // NOTE: if you want to persist this new refresh token, you'd need to save it
-    // back to your secrets store (Vercel env vars) manually.
+    // NOTE: if Spotify returns a new refresh token and you want it persisted,
+    // copy it and update your Vercel env variable manually.
   }
 
-  // Return the freshly obtained access token (definite string)
-  return data.access_token;
+  // Return the fresh access token (definite string)
+  return newAccess;
 }
