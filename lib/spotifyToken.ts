@@ -1,16 +1,12 @@
 // lib/spotifyToken.ts
-let accessToken: string | null = null;
-let refreshToken: string | null = null;
+let cachedToken: string | null = null;
 let tokenExpiresAt: number | null = null;
 
-export function setTokens(newAccessToken: string, newRefreshToken: string, expiresIn: number) {
-  accessToken = newAccessToken;
-  refreshToken = newRefreshToken;
-  tokenExpiresAt = Date.now() + expiresIn * 1000;
-}
-
-export async function refreshAccessToken() {
-  if (!refreshToken) throw new Error("No refresh token set.");
+export async function getAccessToken(): Promise<string> {
+  // Return cached token if still valid
+  if (cachedToken && tokenExpiresAt && Date.now() < tokenExpiresAt) {
+    return cachedToken;
+  }
 
   const clientId = process.env.SPOTIFY_CLIENT_ID!;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET!;
@@ -18,36 +14,23 @@ export async function refreshAccessToken() {
 
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
-    headers: { 
-      Authorization: `Basic ${credentials}`, 
-      "Content-Type": "application/x-www-form-urlencoded" 
+    headers: {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-    }),
+    body: "grant_type=client_credentials",
   });
 
-  const data = await response.json();
-  if (!data.access_token) throw new Error("Failed to refresh Spotify token");
-
-  accessToken = data.access_token;
-  tokenExpiresAt = Date.now() + (data.expires_in ?? 3600) * 1000;
-}
-
-export async function getAccessToken(): Promise<string> {
-  if (!accessToken || !tokenExpiresAt || Date.now() >= tokenExpiresAt) {
-    await refreshAccessToken();
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Spotify token request failed: ${response.status} ${text}`);
   }
-  return accessToken!;
-}
 
-export async function getCurrentlyPlaying() {
-  const token = await getAccessToken();
-  const res = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (res.status === 204) return null; // nothing playing
-  if (!res.ok) throw new Error("Failed to fetch currently playing track");
-  return res.json();
+  const data: { access_token?: string; expires_in?: number } = await response.json();
+  if (!data.access_token) throw new Error("Spotify access token not found");
+
+  cachedToken = data.access_token;
+  tokenExpiresAt = Date.now() + (data.expires_in ?? 3600) * 1000; // 1 hour default
+
+  return cachedToken;
 }

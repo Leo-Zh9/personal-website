@@ -1,47 +1,37 @@
 "use client";
-import { useEffect, useState } from "react";
-
-interface Track {
-  name: string;
-  artists: string;
-  url: string;
-}
+import { useEffect } from "react";
 
 export default function Home() {
-  const [track, setTrack] = useState<Track | null>(null);
-
-  async function fetchTrack() {
-    const res = await fetch("/api/current-track");
-    const data = await res.json();
-    if (!data.error && data.name) setTrack(data);
-    else setTrack(null);
-  }
-
   useEffect(() => {
-    fetchTrack();
-    const interval = setInterval(fetchTrack, 10000); // refresh every 10s
-    return () => clearInterval(interval);
+    // Dynamically add the CSS file
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/style.css";
+    document.head.appendChild(link);
+
+    // Dynamically add the JS file
+    const script = document.createElement("script");
+    script.src = "/script.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Clean up on unmount
+    return () => {
+      document.head.removeChild(link);
+      document.body.removeChild(script);
+    };
   }, []);
 
-  const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI!)}&scope=user-read-currently-playing`;
-
   return (
-    <div style={{ padding: "1rem" }}>
-      <div style={{ position: "absolute", top: 10, left: 10 }}>
-        <a href={spotifyAuthUrl}>
-          <button>Login with Spotify</button>
-        </a>
+    <div id="spotify-container">
+      <div id="track-info">
+        <p id="track-name">Loading...</p>
+        <p id="track-artist"></p>
+        {/* Optional: album image */}
+        {/* <img id="track-album" alt="Album Art" /> */}
       </div>
-
-      <div style={{ marginTop: "4rem" }}>
-        {track ? (
-          <a href={track.url} target="_blank" rel="noopener noreferrer">
-            {track.name} - {track.artists}
-          </a>
-        ) : (
-          <p>Nothing here</p>
-        )}
-      </div>
+      {/* Canvas for waves */}
+      <canvas id="waveCanvas"></canvas>
     </div>
   );
 }
