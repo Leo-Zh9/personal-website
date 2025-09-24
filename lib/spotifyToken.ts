@@ -1,40 +1,43 @@
 // lib/spotifyToken.ts
 let accessToken: string | null = null;
-let refreshToken: string | null = null;
 let tokenExpiry = 0;
 
-export async function refreshAccessToken(): Promise<string> {
+export async function getAccessToken(): Promise<string> {
+  if (accessToken && Date.now() < tokenExpiry) return accessToken;
+
   const clientId = process.env.SPOTIFY_CLIENT_ID!;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET!;
-  const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN!;
+  const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN!;
 
-  const authString = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error("Missing Spotify credentials in env variables.");
+  }
+
+  const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
-      Authorization: `Basic ${authString}`,
+      Authorization: `Basic ${authHeader}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
       grant_type: "refresh_token",
-      refresh_token,
+      refresh_token: refreshToken,
     }),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to refresh access token");
+    const text = await response.text();
+    throw new Error(`Failed to refresh Spotify token: ${text}`);
   }
 
   const data = await response.json();
+  if (!data.access_token) throw new Error("No access token returned");
 
-  accessToken = data.access_token;
+  const token: string = data.access_token;
+  accessToken = token;
   tokenExpiry = Date.now() + data.expires_in * 1000;
 
-  // Only update refreshToken if Spotify returns a new one
-  if (data.refresh_token) {
-    refreshToken = data.refresh_token;
-  }
-
-  return accessToken!;
+  return token;
 }

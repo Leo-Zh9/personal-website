@@ -1,33 +1,43 @@
 // app/api/current-track/route.ts
-import { NextResponse } from "next/server";
-import { refreshAccessToken } from "@/lib/spotifyToken";
+import { NextRequest, NextResponse } from "next/server";
+import { getAccessToken } from "@/lib/spotifyToken";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const accessToken = await refreshAccessToken();
+    const token = await getAccessToken();
 
-    const res = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    // Fetch the most recently played track
+    const res = await fetch(
+      "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    if (res.status === 204 || res.status > 400) {
-      return NextResponse.json({ isPlaying: false }, { status: 200 });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Spotify API error: ${res.status} ${text}`);
     }
 
-    const song = await res.json();
-    const track = {
-      isPlaying: true,
-      title: song.item?.name || "Unknown",
-      artist: song.item?.artists?.map((a: any) => a.name).join(", ") || "Unknown",
-      url: song.item?.external_urls?.spotify || "",
-      albumArt: song.item?.album?.images?.[0]?.url || "",
-    };
+    const data = await res.json();
 
-    return NextResponse.json(track, { status: 200 });
-  } catch (error: any) {
-    console.error("Error fetching current track:", error);
+    if (!data.items || data.items.length === 0) {
+      return NextResponse.json({ isPlaying: false });
+    }
+
+    const track = data.items[0].track;
+
+    return NextResponse.json({
+      isPlaying: true,
+      title: track.name,
+      artist: track.artists.map((a: any) => a.name).join(", "),
+      url: track.external_urls.spotify,
+      albumArt: track.album.images[0]?.url ?? "",
+    });
+  } catch (err: any) {
+    console.error("Error fetching track:", err);
     return NextResponse.json({ error: "Failed to fetch track" }, { status: 500 });
   }
 }

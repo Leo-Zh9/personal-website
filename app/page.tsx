@@ -14,11 +14,11 @@ interface Track {
 export default function Home() {
   const [track, setTrack] = useState<Track>({ isPlaying: false });
 
-  // Fetch current track from API
   const getCurrentTrack = async () => {
     try {
       const res = await fetch("/api/current-track");
       const data = await res.json();
+      console.log("Fetched track:", data); // debug
       setTrack(data);
     } catch (err) {
       console.error("Failed to fetch track:", err);
@@ -26,14 +26,14 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getCurrentTrack(); // initial fetch
-    const interval = setInterval(getCurrentTrack, 10000); // every 10 seconds
+    getCurrentTrack();
+    const interval = setInterval(getCurrentTrack, 10000); // refresh every 10s
     return () => clearInterval(interval);
   }, []);
 
   return (
     <>
-      {/* Pulsing waves canvas */}
+      {/* Pulsing waves background */}
       <canvas id="waveCanvas"></canvas>
 
       {/* Spotify container */}
@@ -71,7 +71,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* Include your script.js */}
+      {/* Waves animation script */}
       <script src="/script.js"></script>
     </>
   );
