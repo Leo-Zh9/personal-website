@@ -1,0 +1,43 @@
+/* Reset + base styles */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black; /* site background */
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Canvas styling */
+#waveCanvas {
+  width: 100%;
+  height: 200px;
+  display: block;
+  background: black;
+}
+
+/* Spotify container styling */
+#spotify-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#track-name {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#track-artist {
+  font-size: 18px;
+  color: #aaa;
+}
+
+#track-album {
+  margin-top: 10px;
+  border-radius: 10px;
+}
