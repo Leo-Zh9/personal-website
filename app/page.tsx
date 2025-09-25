@@ -1,35 +1,31 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-// import './public/style.css';
 
 interface Track {
-  name: string;
-  artists: { name: string }[];
-  album: { images: { url: string }[] };
+  title: string;
+  artist: string;
+  album: string;
+  albumImageUrl: string;
+  songUrl: string;
+  isPlaying: boolean;
 }
 
 export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
 
-  // Fetch currently playing track from API
   async function fetchTrack() {
     try {
-      const res = await fetch('/api/current-track');
+      const res = await fetch('/current-track');
       const data = await res.json();
-
-      if (!data.error && data.item) {
-        setTrack(data.item);
-      } else {
-        setTrack(null);
-      }
+      if (data.isPlaying) setTrack(data);
+      else setTrack(null);
     } catch (err) {
       console.error('Error fetching Spotify track:', err);
       setTrack(null);
     }
   }
 
-  // Fetch track on mount and every 10 seconds
   useEffect(() => {
     fetchTrack();
     const interval = setInterval(fetchTrack, 10000);
@@ -38,29 +34,49 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Canvas for pulsing waves */}
-      <canvas id="waveCanvas"></canvas>
+      {/* Canvas for waves */}
+      <canvas id="waveCanvas" style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }} />
 
-      {/* Spotify track info */}
-      <div id="spotify-container">
+      {/* Spotify overlay */}
+      <div
+        id="spotify-container"
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 20,
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          color: 'white',
+          fontFamily: 'sans-serif',
+        }}
+      >
         {track ? (
-          <>
+          <a
+            href={track.songUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'flex', alignItems: 'center', gap: 10 }}
+          >
             <img
-              src={track.album.images[0].url}
-              alt={track.name}
-              style={{ width: 150, height: 150 }}
+              src={track.albumImageUrl}
+              alt={track.title}
+              width={64}
+              height={64}
+              style={{ borderRadius: 8 }}
             />
-            <h2 id="track-name">{track.name}</h2>
-            <h3 id="track-artist">
-              {track.artists.map(a => a.name).join(', ')}
-            </h3>
-          </>
+            <div>
+              <div style={{ fontWeight: 'bold' }}>{track.title}</div>
+              <div>{track.artist}</div>
+            </div>
+          </a>
         ) : (
-          <h2>No track playing</h2>
+          <div>Not playing anything right now 🎧</div>
         )}
       </div>
 
-      {/* Include your waves script */}
+      {/* Include your waves animation */}
       <script src="./script.js"></script>
     </>
   );
