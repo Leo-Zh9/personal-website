@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import './style.css';
+// import './public/style.css';
 
 interface Track {
   name: string;
