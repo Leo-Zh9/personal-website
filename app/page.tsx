@@ -15,24 +15,26 @@ export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
 
   async function fetchTrack() {
-  try {
-    const res = await fetch(`${window.location.origin}/current-track`);
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-    
-    const data = await res.json();
-    console.log("Spotify API returned:", data);
+    try {
+      // Updated fetch URL
+      const res = await fetch(`${window.location.origin}/api/current-track`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      
+      const data = await res.json();
+      console.log("Spotify API returned:", data);
 
-    if (data.isPlaying) setTrack(data);
-    else setTrack(null);
-  } catch (err) {
-    console.error('Error fetching Spotify track:', err);
-    setTrack(null);
+      if (data.isPlaying) setTrack(data);
+      else setTrack(null);
+    } catch (err) {
+      console.error('Error fetching Spotify track:', err);
+      setTrack(null);
+    }
   }
-}
-
 
   useEffect(() => {
     fetchTrack();
+
+    // Refresh every 10 seconds
     const interval = setInterval(fetchTrack, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -40,7 +42,10 @@ export default function HomePage() {
   return (
     <>
       {/* Canvas for waves */}
-      <canvas id="waveCanvas" style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }} />
+      <canvas
+        id="waveCanvas"
+        style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }}
+      />
 
       {/* Spotify overlay */}
       <div
