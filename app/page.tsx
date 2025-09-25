@@ -15,16 +15,21 @@ export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
 
   async function fetchTrack() {
-    try {
-      const res = await fetch('/current-track');
-      const data = await res.json();
-      if (data.isPlaying) setTrack(data);
-      else setTrack(null);
-    } catch (err) {
-      console.error('Error fetching Spotify track:', err);
-      setTrack(null);
-    }
+  try {
+    const res = await fetch(`${window.location.origin}/current-track`);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    
+    const data = await res.json();
+    console.log("Spotify API returned:", data);
+
+    if (data.isPlaying) setTrack(data);
+    else setTrack(null);
+  } catch (err) {
+    console.error('Error fetching Spotify track:', err);
+    setTrack(null);
   }
+}
+
 
   useEffect(() => {
     fetchTrack();
