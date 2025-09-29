@@ -35,7 +35,7 @@ export default function HomePage() {
     fetchTrack();
 
     // Refresh every 10 seconds
-    const interval = setInterval(fetchTrack, 10000);
+    const interval = setInterval(fetchTrack, 1000);
     return () => clearInterval(interval);
   }, []);
 
