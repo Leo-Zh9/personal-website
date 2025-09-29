@@ -2,6 +2,8 @@
 
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic'; 
+
 // Spotify API Endpoints
 // Use these actual endpoints (the previous URLs were placeholders)
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
