@@ -1,14 +1,19 @@
 import "./globals.css";
+import type { Metadata } from "next";
+import Header from "../components/header"; 
 
-export const metadata = {
-  title: "Leo Zhang | Personal Website",
-  description: "My personal website with Spotify integration",
+export const metadata: Metadata = {
+  title: "Leo Zhang !",
+  description: "My personal website",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Header /> {/* Site Header */}
+        {children}
+      </body>
     </html>
   );
 }

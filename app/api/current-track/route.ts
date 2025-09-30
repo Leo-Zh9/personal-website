@@ -1,116 +1,124 @@
-// /api/current-track/route.ts
-
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'; 
 
-// Spotify API Endpoints
-// Use these actual endpoints (the previous URLs were placeholders)
+// Spotify API Endpoints (Confirmed)
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const NOW_PLAYING_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing";
 
-// Environment Variables
-// These values are read automatically by Next.js/Vercel from your .env.local file
-// (for local testing) or Vercel Environment Variables (for deployment).
+// Environment Variables (Assumed to be set correctly in .env.local)
 const client_id = process.env.SPOTIFY_CLIENT_ID!;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
 const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN!; 
 
-// Function to exchange the Refresh Token for a new Access Token
-async function getAccessToken() {
-  const response = await fetch(TOKEN_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      // Base64 encode the Client ID and Client Secret
-      Authorization:
-        "Basic " + Buffer.from(`${client_id}:${client_secret}`).toString("base64"),
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token,
-    }),
-    // Ensure this request is always fresh and not cached by Next.js/Vercel
-    cache: "no-store", 
-  });
 
-  return response.json();
+// --- 🌟 NEW: External BPM Lookup Function (Mocked) 🌟 ---
+async function getBpmFromExternalService(title: string, artist: string): Promise<number | null> {
+    // 🛑 IMPORTANT: REPLACE THIS MOCK LOGIC WITH A REAL API CALL 🛑
+    // This function should take the title and artist, query an external music API (e.g., from RapidAPI),
+    // and return the tempo found.
+    
+    console.log(`MOCK: Attempting to look up BPM for: "${title}" by ${artist}`);
+
+    // Mocked result for development:
+    const baseBPM = 120;
+    
+    // Simple logic to simulate variation based on song title for testing:
+    if (title.toLowerCase().includes('dance') || title.toLowerCase().includes('house')) {
+         return 128; // Higher BPM
+    } else if (title.toLowerCase().includes('ballad') || title.toLowerCase().includes('slow')) {
+         return 75; // Lower BPM
+    }
+    
+    return baseBPM; 
+}
+// ----------------------------------------------------
+
+
+async function getAccessToken() {
+  const response = await fetch(TOKEN_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " + Buffer.from(`${client_id}:${client_secret}`).toString("base64"),
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token,
+    }),
+    cache: "no-store", 
+  });
+
+  return response.json();
 }
 
 export async function GET() {
-  try {
-    // 1. Get a fresh Access Token using the Refresh Token
-    const tokenResponse = await getAccessToken();
-    const { access_token, error } = tokenResponse;
+  try {
+    // 1. Get a fresh Access Token
+    const tokenResponse = await getAccessToken();
+    const { access_token, error } = tokenResponse;
 
-    // Check for an error in the token response (e.g., bad refresh token)
-    if (error) {
-        console.error("Spotify Token Error:", error);
-        throw new Error("Failed to refresh Spotify token.");
-    }
+    if (error || !access_token) {
+        console.error("Spotify Token Error:", error || "Access token missing.");
+        throw new Error("Failed to refresh Spotify token. Check your environment variables.");
+    }
+    
+    // 2. Get the currently playing track
+    const nowPlayingRes = await fetch(
+      NOW_PLAYING_ENDPOINT,
+      {
+        headers: { Authorization: `Bearer ${access_token}` },
+        cache: "no-store",
+      }
+    );
+
+    if (nowPlayingRes.status === 204) {
+      return NextResponse.json(
+        { isPlaying: false, bpm: null },
+        { status: 200, headers: { "Cache-Control": "public, s-maxage=10, must-revalidate" } }
+      );
+    }
+    
+    if (nowPlayingRes.status > 400) {
+        throw new Error(`Spotify Now Playing API error: ${nowPlayingRes.status}`);
+    }
+
+    const song = await nowPlayingRes.json();
     
-    // 2. Use the Access Token to get the currently playing track
-    const nowPlayingRes = await fetch(
-      NOW_PLAYING_ENDPOINT,
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-        // Ensure this request is always fresh and not cached
-        cache: "no-store",
-      }
-    );
-
-    // Status 204: No content (Spotify account is not playing anything)
-    if (nowPlayingRes.status === 204) {
-      return NextResponse.json(
-        { isPlaying: false },
-        {
-          status: 200,
-          headers: {
-            "Cache-Control": "public, s-maxage=10, must-revalidate", 
-          },
-        }
-      );
-    }
+    const title = song.item?.name;
+    const artists = song.item?.artists.map((a: any) => a.name).join(", ");
     
-    // Status > 400: General API error (e.g., invalid access token)
-    if (nowPlayingRes.status > 400) {
-        throw new Error(`Spotify Now Playing API error: ${nowPlayingRes.status}`);
+    let bpm: number | null = null;
+
+    // --- 3. Execute BPM lookup using Title and Artist ---
+    if (title && artists) {
+        bpm = await getBpmFromExternalService(title, artists);
+    } else {
+        console.warn("Title or Artist missing for BPM lookup.");
     }
 
-    const song = await nowPlayingRes.json();
-
-    // 3. Map the raw Spotify data to your simplified Track interface
-    return NextResponse.json(
-      {
-        isPlaying: song.is_playing,
-        title: song.item?.name,
-        // Map all artists and join them with a comma
-        artist: song.item?.artists.map((a: any) => a.name).join(", "),
-        album: song.item?.album?.name,
-        albumImageUrl: song.item?.album?.images[0]?.url,
-        songUrl: song.item?.external_urls.spotify,
-      },
-      {
-        status: 200,
-        headers: {
-          // Setting the cache header tells Vercel/CDN that this response is fresh for 10 seconds.
-          // This reduces the serverless function invocations while still meeting your 10s refresh rate.
-          "Cache-Control": "public, s-maxage=10, must-revalidate", 
-        },
-      }
-    );
-  } catch (err) {
-    console.error("Full Spotify API call failed:", err);
-    return NextResponse.json(
-      { error: "Failed to fetch track. Check Vercel logs." },
-      {
-        status: 500,
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
-    );
-  }
+    // 4. Map the data and include the 'bpm' field
+    return NextResponse.json(
+      {
+        isPlaying: song.is_playing,
+        bpm: bpm, // The BPM value (from external service)
+        title: title,
+        artist: artists,
+        album: song.item?.album?.name,
+        albumImageUrl: song.item?.album?.images[0]?.url,
+        songUrl: song.item?.external_urls.spotify,
+      },
+      {
+        status: 200,
+        headers: { "Cache-Control": "public, s-maxage=10, must-revalidate" },
+      }
+    );
+  } catch (err) {
+    console.error("Full Spotify/BPM API call failed:", err);
+    return NextResponse.json(
+      { error: "Failed to fetch track. Check logs." },
+      { status: 500, headers: { "Cache-Control": "no-store" } }
+    );
+  }
 }

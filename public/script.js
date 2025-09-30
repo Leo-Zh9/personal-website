@@ -4,11 +4,11 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const NUM_LINES = 7;
-const NUM_POINTS = 500;
+const NUM_LINES = 9;
+const NUM_POINTS = 1000;
 const MIN_AMPLITUDE = 50;
-const MAX_AMPLITUDE = 120;
-const PULSE_INTERVAL = 1000;
+const MAX_AMPLITUDE = 130;
+const PULSE_INTERVAL = 900;
 
 const strings = [];
 for (let i = 0; i < NUM_LINES; i++) {

@@ -1,39 +1,43 @@
+// page.tsx (FINAL — BPM removed, artist removed)
+
 'use client';
 
 import { useEffect, useState } from 'react';
+import Script from "next/script";
 
+// --- Interface without BPM ---
 interface Track {
   title: string;
-  artist: string;
   album: string;
   albumImageUrl: string;
   songUrl: string;
   isPlaying: boolean;
 }
 
-const FULL_TITLE = "Leo Zhang"; 
+const FULL_TITLE = "Welcome!"; 
 const LETTER_DELAY_MS = 90; 
 const START_DELAY_MS = 700; 
-const CURSOR_PERSIST_MS = 3000; // 🚀 NEW: Cursor stays for 2 seconds (2000ms)
+const CURSOR_PERSIST_MS = 3000; 
 
 export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
   const [displayedTitle, setDisplayedTitle] = useState(''); 
   const [titleIndex, setTitleIndex] = useState(0); 
   const [animationStarted, setAnimationStarted] = useState(false); 
-  const [cursorFinalHide, setCursorFinalHide] = useState(false); // 🚀 NEW: State to hide cursor
+  const [cursorFinalHide, setCursorFinalHide] = useState(false); 
 
-  // --- Spotify Track Fetching (Remains the same) ---
+  // --- Spotify Track Fetching ---
   async function fetchTrack() {
     try {
-      const res = await fetch(`${window.location.origin}/api/current-track`);
+      const res = await fetch(`/api/current-track`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       
-      const data = await res.json();
-      console.log("Spotify API returned:", data);
-
-      if (data.isPlaying) setTrack(data);
-      else setTrack(null);
+      const data: Track = await res.json();
+      if (data.isPlaying && data.title) {
+        setTrack(data);
+      } else {
+        setTrack(null);
+      }
     } catch (err) {
       console.error('Error fetching Spotify track:', err);
       setTrack(null);
@@ -46,88 +50,115 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // --- Typing Animation Initial Delay Logic ---
+  // --- Typing Animation Logic ---
   useEffect(() => {
     const initialDelay = setTimeout(() => {
-        setAnimationStarted(true);
+      setAnimationStarted(true);
     }, START_DELAY_MS);
-
     return () => clearTimeout(initialDelay);
   }, []); 
 
-  // --- Typing Animation Core Logic ---
   useEffect(() => {
     if (animationStarted && titleIndex < FULL_TITLE.length) {
       const typingTimeout = setTimeout(() => {
         setDisplayedTitle(prev => prev + FULL_TITLE[titleIndex]);
         setTitleIndex(prev => prev + 1);
       }, LETTER_DELAY_MS);
-
       return () => clearTimeout(typingTimeout);
     }
     
-    // 🚀 NEW: Logic to start cursor final hide timer
     if (titleIndex === FULL_TITLE.length) {
-        const finalTimeout = setTimeout(() => {
-            setCursorFinalHide(true);
-        }, CURSOR_PERSIST_MS);
-        return () => clearTimeout(finalTimeout);
+      const finalTimeout = setTimeout(() => {
+        setCursorFinalHide(true);
+      }, CURSOR_PERSIST_MS);
+      return () => clearTimeout(finalTimeout);
     }
   }, [titleIndex, animationStarted]);
 
-  // Determine the class based on typing status and the new cursor hide state
+  // Determine the cursor class
   let cursorClass = 'typing-inactive';
   if (animationStarted && titleIndex < FULL_TITLE.length) {
-      cursorClass = 'typing-active'; // Typing is happening
+    cursorClass = 'typing-active';
   } else if (titleIndex === FULL_TITLE.length && !cursorFinalHide) {
-      cursorClass = 'typing-active'; // Typing finished, but cursor is persisting
+    cursorClass = 'typing-active';
   } else {
-      cursorClass = 'typing-done'; // Typing finished, and persistence time is over
+    cursorClass = 'typing-done';
   }
+  
+  // --- Render Logic Setup ---
+  let trackDetailsContent: React.ReactNode;
 
+  if (track) {
+    trackDetailsContent = (
+      <a
+        href={track.songUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {/* 1. Album Cover */}
+        <img
+          id="track-album"
+          src={track.albumImageUrl}
+          alt={`${track.title} album cover`}
+        />
+        
+        {/* 2. Text — artist removed */}
+        <div id="track-details-text">
+          <span id="listening-prefix">Now listening to: </span>
+          <span id="track-title-formatted">{track.title}</span>
+        </div>
+      </a>
+    );
+  } else {
+    // Text when nothing is playing
+    trackDetailsContent = (
+      <div id="track-details-text">
+        <div>Not playing anything right now...</div>
+      </div>
+    );
+  }
+  
   return (
     <>
-      {/* Title with typing animation. Using the dynamically determined class. */}
-      <h1 id="main-title" className={cursorClass}>
-        {displayedTitle}
-      </h1>
+      {/* Home screen container */}
+      <div id="home-screen-container">
+        {/* Title with typing animation */}
+        <h1 id="main-title" className={cursorClass}>
+          {displayedTitle}
+        </h1>
 
-      {/* Canvas for waves - Repositioned via globals.css */}
-      <canvas
-        id="waveCanvas"
-        style={{ zIndex: 0 }} 
-      />
+        {/* Canvas for waves */}
+        <canvas
+          id="waveCanvas"
+          style={{ zIndex: 0 }} 
+        />
 
-      {/* Spotify overlay - Positioned at bottom-left via CSS */}
-      <div id="spotify-container">
-        {track ? (
-          // The entire block is the link <a>
-          <a
-            href={track.songUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {/* 1. Album Cover */}
-            <img
-              id="track-album"
-              src={track.albumImageUrl}
-              alt={track.title}
-            />
-            
-            {/* 2. Text is placed below the image and is reformatted and italicized */}
-            <div id="track-details-text"> 
-              <span id="listening-prefix">Now listening to: </span>
-              <span id="track-title-formatted">{track.title}</span>
-              <span id="artist-formatted"> ({track.artist})</span>
-            </div>
-          </a>
-        ) : (
-          <div>Not playing anything right now...</div>
-        )}
+        {/* Spotify overlay */}
+        <div id="spotify-container">
+          {trackDetailsContent}
+        </div>
+        
+        {/* Load your JavaScript file */}
+        <Script src="/script.js" strategy="afterInteractive" />
       </div>
 
-      {/* Include your waves animation */}
-      <script src="./script.js"></script>
+      {/* Scrollable content sections */}
+      <main id="scrollable-content">
+        <section id="about-me" className="content-section">
+          <h2 className="section-title">About Me</h2>
+          <p>Introduce yourself here! This section is now scrollable.</p>
+        </section>
+
+        <section id="projects" className="content-section">
+          <h2 className="section-title">Projects</h2>
+          <p>List your key projects here. This section is now scrollable.</p>
+        </section>
+
+        <section id="experiences" className="content-section">
+          <h2 className="section-title">Experiences</h2>
+          <p>Detail your work and experience here. This section is now scrollable.</p>
+        </section>
+      </main>
     </>
   );
 }
