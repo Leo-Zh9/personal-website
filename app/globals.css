@@ -3,52 +3,77 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: black; /* site background */
+  background-color: black; 
   color: white;
-  
-  /* Base font for all general text */
-  font-family: sans-serif; /* Keep a generic fallback */
+  font-family: sans-serif;
+  height: 100%; /* Ensure body fills viewport */
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* 🚀 NEW: Distinct Title Styling */
+/* ----------------------------------------------------- */
+/* CURSOR BLINK ANIMATION */
+/* ----------------------------------------------------- */
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* MAIN TITLE STYLING */
 #main-title {
-  /* 🎨 FONT CHANGE: Strong, classic serif font for distinction */
+  /* FONT: Strong, classic serif font for distinction */
   font-family: 'Times New Roman', Georgia, serif; 
   
-  /* Positioning and size from your previous inline styles */
+  /* STYLING UPDATES */
+  font-size: 7em;
+  top: 96px;
+  
+  /* Positioning and Layout */
   text-align: center;
-  font-size: 6em; /* Adjust this to change the size */
   font-weight: bold;
   color: white;
   position: absolute;
-  top: 100px; /* Adjust this value to change vertical position */
   width: 100%;
   z-index: 20;
+  display: inline-block; 
 }
 
+/* CURSOR STYLING (Active while typing OR during persistence) */
+#main-title.typing-active::after {
+  content: '|'; 
+  display: inline-block;
+  color: white; 
+  font-weight: bold;
+  margin-left: 5px; 
+  animation: blink 0.9s infinite step-end;
+}
 
-/* Canvas styling */
+/* Hide cursor after typing and persistence is complete */
+#main-title.typing-done::after {
+  content: '';
+}
+
+/* ----------------------------------------------------- */
+/* Canvas styling - Full screen for visualizer */
 #waveCanvas {
   width: 100%;
+  height: 100vh; /* Make canvas fill the entire viewport height */
   display: block;
   background: black;
-  /* Reposition the canvas to be below the title */
   position: absolute; 
-  top: 70px; /* Adjust this value to change the wave's vertical position */
+  top: 0; 
   left: 0;
 }
 
-/* 🚀 POSITION: Spotify container is BOTTOM-LEFT */
+/* SPOTIFY CONTAINER (BOTTOM-LEFT) */
 #spotify-container {
-  /* This sets the container's position on the page */
   position: absolute; 
   bottom: 20px; 
   left: 20px; 
-  
   z-index: 10;
   display: block; 
   padding: 10px; 
@@ -56,11 +81,9 @@ body {
 
 /* THE LINK WRAPPER (The <a> tag) */
 #spotify-container a {
-  /* Vertical Stack */
   display: flex;
   flex-direction: column; 
   align-items: flex-start; 
-  
   color: white !important; 
   text-decoration: none; 
   gap: 8px; 
@@ -86,13 +109,11 @@ body {
 
 /* TEXT BLOCK: Spotify Descriptor Styles */
 #track-details-text {
-    /* FONT: The softer 'Roboto' font is set here */
     font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    
     width: 100%;
     color: white !important;
     font-size: 18px; 
-    font-style: italic;
+    font-style: italic; 
 }
 
 /* Specific formatting for new text elements */

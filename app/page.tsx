@@ -11,12 +11,21 @@ interface Track {
   isPlaying: boolean;
 }
 
+const FULL_TITLE = "Leo Zhang"; 
+const LETTER_DELAY_MS = 90; 
+const START_DELAY_MS = 700; 
+const CURSOR_PERSIST_MS = 3000; // 🚀 NEW: Cursor stays for 2 seconds (2000ms)
+
 export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
+  const [displayedTitle, setDisplayedTitle] = useState(''); 
+  const [titleIndex, setTitleIndex] = useState(0); 
+  const [animationStarted, setAnimationStarted] = useState(false); 
+  const [cursorFinalHide, setCursorFinalHide] = useState(false); // 🚀 NEW: State to hide cursor
 
+  // --- Spotify Track Fetching (Remains the same) ---
   async function fetchTrack() {
     try {
-      // Updated fetch URL
       const res = await fetch(`${window.location.origin}/api/current-track`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       
@@ -37,14 +46,53 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
+  // --- Typing Animation Initial Delay Logic ---
+  useEffect(() => {
+    const initialDelay = setTimeout(() => {
+        setAnimationStarted(true);
+    }, START_DELAY_MS);
+
+    return () => clearTimeout(initialDelay);
+  }, []); 
+
+  // --- Typing Animation Core Logic ---
+  useEffect(() => {
+    if (animationStarted && titleIndex < FULL_TITLE.length) {
+      const typingTimeout = setTimeout(() => {
+        setDisplayedTitle(prev => prev + FULL_TITLE[titleIndex]);
+        setTitleIndex(prev => prev + 1);
+      }, LETTER_DELAY_MS);
+
+      return () => clearTimeout(typingTimeout);
+    }
+    
+    // 🚀 NEW: Logic to start cursor final hide timer
+    if (titleIndex === FULL_TITLE.length) {
+        const finalTimeout = setTimeout(() => {
+            setCursorFinalHide(true);
+        }, CURSOR_PERSIST_MS);
+        return () => clearTimeout(finalTimeout);
+    }
+  }, [titleIndex, animationStarted]);
+
+  // Determine the class based on typing status and the new cursor hide state
+  let cursorClass = 'typing-inactive';
+  if (animationStarted && titleIndex < FULL_TITLE.length) {
+      cursorClass = 'typing-active'; // Typing is happening
+  } else if (titleIndex === FULL_TITLE.length && !cursorFinalHide) {
+      cursorClass = 'typing-active'; // Typing finished, but cursor is persisting
+  } else {
+      cursorClass = 'typing-done'; // Typing finished, and persistence time is over
+  }
+
   return (
     <>
-      {/* 🚀 NEW: Title with ID, now styled by globals.css */}
-      <h1 id="main-title">
-        Hi! 
+      {/* Title with typing animation. Using the dynamically determined class. */}
+      <h1 id="main-title" className={cursorClass}>
+        {displayedTitle}
       </h1>
 
-      {/* Canvas for waves - Repositioned via globals.css to be below the title */}
+      {/* Canvas for waves - Repositioned via globals.css */}
       <canvas
         id="waveCanvas"
         style={{ zIndex: 0 }} 
