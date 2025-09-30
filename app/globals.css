@@ -5,38 +5,107 @@ body {
   padding: 0;
   background-color: black; /* site background */
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  
+  /* Base font for all general text */
+  font-family: sans-serif; /* Keep a generic fallback */
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* 🚀 NEW: Distinct Title Styling */
+#main-title {
+  /* 🎨 FONT CHANGE: Strong, classic serif font for distinction */
+  font-family: 'Times New Roman', Georgia, serif; 
+  
+  /* Positioning and size from your previous inline styles */
+  text-align: center;
+  font-size: 6em; /* Adjust this to change the size */
+  font-weight: bold;
+  color: white;
+  position: absolute;
+  top: 100px; /* Adjust this value to change vertical position */
+  width: 100%;
+  z-index: 20;
+}
+
+
 /* Canvas styling */
 #waveCanvas {
   width: 100%;
   display: block;
   background: black;
+  /* Reposition the canvas to be below the title */
+  position: absolute; 
+  top: 70px; /* Adjust this value to change the wave's vertical position */
+  left: 0;
 }
 
-/* Spotify container styling */
+/* 🚀 POSITION: Spotify container is BOTTOM-LEFT */
 #spotify-container {
-  text-align: center;
-  margin-top: 20px;
+  /* This sets the container's position on the page */
+  position: absolute; 
+  bottom: 20px; 
+  left: 20px; 
+  
+  z-index: 10;
+  display: block; 
+  padding: 10px; 
 }
 
-#track-name {
-  font-size: 24px;
-  font-weight: bold;
+/* THE LINK WRAPPER (The <a> tag) */
+#spotify-container a {
+  /* Vertical Stack */
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start; 
+  
+  color: white !important; 
+  text-decoration: none; 
+  gap: 8px; 
 }
 
-#track-artist {
-  font-size: 18px;
-  color: #aaa;
+/* CRITICAL FIX: Ensure Links Stay White on ALL states */
+#spotify-container a:link,
+#spotify-container a:visited,
+#spotify-container a:hover,
+#spotify-container a:active {
+  color: white !important; 
+  text-decoration: none;
 }
 
+/* ALBUM COVER: Bigger and Styled */
 #track-album {
-  margin-top: 10px;
-  border-radius: 10px;
+  width: 120px; 
+  height: 120px; 
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* TEXT BLOCK: Spotify Descriptor Styles */
+#track-details-text {
+    /* FONT: The softer 'Roboto' font is set here */
+    font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    
+    width: 100%;
+    color: white !important;
+    font-size: 18px; 
+    font-style: italic;
+}
+
+/* Specific formatting for new text elements */
+#listening-prefix {
+    font-weight: normal;
+    opacity: 0.8;
+}
+
+#track-title-formatted {
+    font-weight: 700; 
+}
+
+#artist-formatted {
+    font-weight: normal;
+    opacity: 0.9;
 }

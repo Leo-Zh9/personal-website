@@ -33,56 +33,48 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchTrack();
-
-    // Refresh every 10 seconds
-    const interval = setInterval(fetchTrack, 1000);
+    const interval = setInterval(fetchTrack, 10000); 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <>
-      {/* Canvas for waves */}
+      {/* 🚀 NEW: Title with ID, now styled by globals.css */}
+      <h1 id="main-title">
+        Hi! 
+      </h1>
+
+      {/* Canvas for waves - Repositioned via globals.css to be below the title */}
       <canvas
         id="waveCanvas"
-        style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }}
+        style={{ zIndex: 0 }} 
       />
 
-      {/* Spotify overlay */}
-      <div
-        id="spotify-container"
-        style={{
-          position: 'absolute',
-          top: 20,
-          left: 20,
-          zIndex: 10,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          color: 'white',
-          fontFamily: 'sans-serif',
-        }}
-      >
+      {/* Spotify overlay - Positioned at bottom-left via CSS */}
+      <div id="spotify-container">
         {track ? (
+          // The entire block is the link <a>
           <a
             href={track.songUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: 'flex', alignItems: 'center', gap: 10 }}
           >
+            {/* 1. Album Cover */}
             <img
+              id="track-album"
               src={track.albumImageUrl}
               alt={track.title}
-              width={64}
-              height={64}
-              style={{ borderRadius: 8 }}
             />
-            <div>
-              <div style={{ fontWeight: 'bold' }}>{track.title}</div>
-              <div>{track.artist}</div>
+            
+            {/* 2. Text is placed below the image and is reformatted and italicized */}
+            <div id="track-details-text"> 
+              <span id="listening-prefix">Now listening to: </span>
+              <span id="track-title-formatted">{track.title}</span>
+              <span id="artist-formatted"> ({track.artist})</span>
             </div>
           </a>
         ) : (
-          <div>Not playing anything right now 🎧</div>
+          <div>Not playing anything right now...</div>
         )}
       </div>
 
