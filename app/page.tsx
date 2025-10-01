@@ -1,10 +1,10 @@
-// page.tsx (FINAL — footer with official brand icons)
+// page.tsx (FINAL — footer with official brand icons + favicon)
 
 'use client';
 
 import { useEffect, useState } from 'react';
 import Script from "next/script";
-// ✅ use react-icons for modern official logos
+import Head from "next/head";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
 
 // --- Interface without BPM ---
@@ -103,7 +103,7 @@ export default function HomePage() {
           alt={`${track.title} album cover`}
         />
         <div id="track-details-text">
-          <span id="listening-prefix">Now listening to: </span>
+          <span id="listening-prefix">I'm currently listening to: </span>
           <span id="track-title-formatted">{track.title}</span>
         </div>
       </a>
@@ -118,6 +118,11 @@ export default function HomePage() {
   
   return (
     <>
+      {/* Add favicon */}
+      <Head>
+        <link rel="icon" href="/propeller-hat.png" type="image/png" />
+      </Head>
+
       {/* Home screen container */}
       <div id="home-screen-container">
         <h1 id="main-title" className={cursorClass}>

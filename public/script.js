@@ -41,7 +41,7 @@ function draw() {
 
         const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
         gradient.addColorStop(0, 'hotpink');
-        gradient.addColorStop(1, 'blue');
+        gradient.addColorStop(1, 'yellow');
         ctx.strokeStyle = gradient;
 
         ctx.beginPath();

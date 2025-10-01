@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { FC } from 'react';
 
@@ -8,7 +7,7 @@ const navItems = [
   { name: 'Projects', href: '#projects' },
   { name: 'Experiences', href: '#experiences' },
   // Resume link opens in a new tab
-  { name: 'Resume', href: '/resume.pdf' }, 
+  { name: 'Resume', href: '"\Leo_Zhang_Resume_External.pdf"' }, 
 ];
 
 const Header: FC = () => {
