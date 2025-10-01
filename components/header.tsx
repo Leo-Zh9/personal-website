@@ -19,7 +19,13 @@ const Header: FC = () => {
         
         {/* Your Name/Logo (Left Side) - Link to home */}
         <Link href="/" className="header-name">
-          Leo Zhang
+          <div className="relative">
+            {/* other content */}
+            <div className="absolute top-0 right-0 p-2">
+              Leo Zhang
+        </div>
+        </div>
+
         </Link>
 
         {/* Navigation Links (Right Side) */}

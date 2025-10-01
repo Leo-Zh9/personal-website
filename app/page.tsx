@@ -1,9 +1,11 @@
-// page.tsx (FINAL — BPM removed, artist removed)
+// page.tsx (FINAL — footer with official brand icons)
 
 'use client';
 
 import { useEffect, useState } from 'react';
 import Script from "next/script";
+// ✅ use react-icons for modern official logos
+import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
 
 // --- Interface without BPM ---
 interface Track {
@@ -95,14 +97,11 @@ export default function HomePage() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {/* 1. Album Cover */}
         <img
           id="track-album"
           src={track.albumImageUrl}
           alt={`${track.title} album cover`}
         />
-        
-        {/* 2. Text — artist removed */}
         <div id="track-details-text">
           <span id="listening-prefix">Now listening to: </span>
           <span id="track-title-formatted">{track.title}</span>
@@ -110,7 +109,6 @@ export default function HomePage() {
       </a>
     );
   } else {
-    // Text when nothing is playing
     trackDetailsContent = (
       <div id="track-details-text">
         <div>Not playing anything right now...</div>
@@ -122,23 +120,12 @@ export default function HomePage() {
     <>
       {/* Home screen container */}
       <div id="home-screen-container">
-        {/* Title with typing animation */}
         <h1 id="main-title" className={cursorClass}>
           {displayedTitle}
         </h1>
 
-        {/* Canvas for waves */}
-        <canvas
-          id="waveCanvas"
-          style={{ zIndex: 0 }} 
-        />
+        <canvas id="waveCanvas" style={{ zIndex: 0 }} />
 
-        {/* Spotify overlay */}
-        <div id="spotify-container">
-          {trackDetailsContent}
-        </div>
-        
-        {/* Load your JavaScript file */}
         <Script src="/script.js" strategy="afterInteractive" />
       </div>
 
@@ -147,6 +134,11 @@ export default function HomePage() {
         <section id="about-me" className="content-section">
           <h2 className="section-title">About Me</h2>
           <p>Introduce yourself here! This section is now scrollable.</p>
+
+          {/* Spotify widget */}
+          <div id="spotify-container">
+            {trackDetailsContent}
+          </div>
         </section>
 
         <section id="projects" className="content-section">
@@ -158,6 +150,36 @@ export default function HomePage() {
           <h2 className="section-title">Experiences</h2>
           <p>Detail your work and experience here. This section is now scrollable.</p>
         </section>
+
+        {/* Footer for social media */}
+        <footer id="footer">
+          <div id="socials-container">
+            <p>Connect with me:</p>
+            <div id="social-icons">
+              <a
+                href="https://www.linkedin.com/in/leo-zhang-047326283/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin size={22} /> <span>LinkedIn</span>
+              </a>
+              <a
+                href="https://twitter.com/yourhandle"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaTwitter size={22} /> <span>Twitter/X</span>
+              </a>
+              <a
+                href="https://github.com/Leo-Zh9"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaGithub size={22} /> <span>GitHub</span>
+              </a>
+            </div>
+          </div>
+        </footer>
       </main>
     </>
   );
