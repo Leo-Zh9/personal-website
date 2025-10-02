@@ -83,10 +83,6 @@ export default function HomePage() {
 
   return (
     <>
-      <Head>
-        <link rel="icon" href="/propeller-hat.png" type="image/png" />
-      </Head>
-
       <div id="home-screen-container">
         <h1 id="main-title" className={cursorClass}>
           {displayedTitle}
