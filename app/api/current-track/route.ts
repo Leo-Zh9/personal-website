@@ -6,10 +6,10 @@ export const dynamic = 'force-dynamic';
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const NOW_PLAYING_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing";
 
-// Environment Variables (Assumed to be set correctly in .env.local)
-const client_id = process.env.SPOTIFY_CLIENT_ID!;
-const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
-const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN!; 
+// Environment Variables (Check if they exist)
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
+const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN; 
 
 
 // --- 🌟 NEW: External BPM Lookup Function (Mocked) 🌟 ---
@@ -54,15 +54,24 @@ async function getAccessToken() {
 }
 
 export async function GET() {
-  try {
-    // 1. Get a fresh Access Token
-    const tokenResponse = await getAccessToken();
-    const { access_token, error } = tokenResponse;
+  try {
+    // Check if environment variables are configured
+    if (!client_id || !client_secret || !refresh_token) {
+      console.log("Spotify API not configured - environment variables missing");
+      return NextResponse.json(
+        { isPlaying: false, error: "Spotify API not configured" },
+        { status: 200, headers: { "Cache-Control": "public, s-maxage=60, must-revalidate" } }
+      );
+    }
 
-    if (error || !access_token) {
-        console.error("Spotify Token Error:", error || "Access token missing.");
-        throw new Error("Failed to refresh Spotify token. Check your environment variables.");
-    }
+    // 1. Get a fresh Access Token
+    const tokenResponse = await getAccessToken();
+    const { access_token, error } = tokenResponse;
+
+    if (error || !access_token) {
+        console.error("Spotify Token Error:", error || "Access token missing.");
+        throw new Error("Failed to refresh Spotify token. Check your environment variables.");
+    }
     
     // 2. Get the currently playing track
     const nowPlayingRes = await fetch(
