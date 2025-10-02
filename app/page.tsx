@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Head from "next/head";
+import Image from "next/image";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
 import Prism from "../components/Prism";
 import BlurText from "../components/BlurText";
@@ -129,7 +130,7 @@ export default function HomePage() {
 
   const trackDetailsContent = track ? (
     <a href={track.songUrl} target="_blank" rel="noopener noreferrer">
-      <img id="track-album" src={track.albumImageUrl} alt={`${track.title} album cover`} />
+      <Image id="track-album" src={track.albumImageUrl} alt={`${track.title} album cover`} width={64} height={64} />
       <div id="track-details-text">
         <span id="listening-prefix">I'm currently listening to: </span>
         <span id="track-title-formatted">{track.title}</span>
@@ -221,10 +222,13 @@ export default function HomePage() {
                 threshold={0.2}
               >
                 <div className="profile-picture-container">
-                  <img 
+                  <Image 
                     src="/about-me-picture.jpg" 
                     alt="Leo Zhang" 
+                    width={300}
+                    height={300}
                     className="profile-picture"
+                    priority
                   />
                   <p className="profile-caption">Little Leo really enjoyed watching TV and building Lego mechs</p>
                 </div>
@@ -262,9 +266,11 @@ export default function HomePage() {
                 <div className="project-right">
                   {project.screenshot && (
                     <div className="project-screenshot">
-                      <img
+                      <Image
                         src={project.screenshot}
                         alt={`${project.title} screenshot`}
+                        width={300}
+                        height={200}
                         className="project-image"
                       />
                     </div>
@@ -365,6 +371,9 @@ export default function HomePage() {
               </a>
               <a href="https://github.com/Leo-Zh9" target="_blank" rel="noopener noreferrer">
                 <FaGithub size={22} /> <span>GitHub</span>
+              </a>
+              <a href="/Leo_Zhang_Resume_External.pdf" target="_blank" rel="noopener noreferrer" className="resume-link">
+                <span>📄 Resume</span>
               </a>
             </div>
           </div>
