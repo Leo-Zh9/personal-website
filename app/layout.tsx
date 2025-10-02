@@ -6,7 +6,10 @@ export const metadata: Metadata = {
   title: "Leo Zhang !",
   description: "My personal website",
   icons: {
-    icon: '/propeller-hat.png',
+    icon: [
+      { url: '/propeller-hat.png', sizes: '32x32', type: 'image/png' },
+      { url: '/propeller-hat.png', sizes: '16x16', type: 'image/png' },
+    ],
   },
 };
 
