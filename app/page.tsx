@@ -25,6 +25,32 @@ interface Experience {
   techStack?: string[];
 }
 
+interface Project {
+  title: string;
+  description: string;
+  period: string;
+  githubUrl?: string;
+  devpostUrl?: string;
+  techStack?: string[];
+  context?: string;
+  screenshot?: string;
+}
+
+
+// Add projects here
+const projects: Project[] = [
+  {
+    title: "Preppin'",
+    description: "An AI-powered meal planning and delivery service that creates personalized recipes based on available ingredients and dietary needs. Users can upload grocery receipts or manually enter ingredients, and the system generates tailored meal plans with convenient grocery delivery options.",
+    period: "July 2024",
+    githubUrl: "https://github.com/austinjiann/Preppin",
+    devpostUrl: "https://devpost.com/software/preppin",
+    context: "Built during StarterHacks 2024 hackathon - a 24-hour coding competition focused on solving real-world problems through innovative technology solutions.",
+    techStack: ["Python", "Flask", "JavaScript", "HTML", "CSS", "OpenAI API", "Tesseract OCR"],
+    screenshot: "/preppin.png"
+  },
+  // Add more projects here
+];
 
 // Add experiences here
 const experiences: Experience[] = [
@@ -211,7 +237,65 @@ export default function HomePage() {
 
         <section id="projects" className="content-section">
           <h2 className="section-title">Projects</h2>
-          <p>List your key projects here. This section is now scrollable.</p>
+
+          <div className="project-list">
+            {projects.map((project, index) => (
+              <div key={index} className="project-item">
+                {/* Left: Text */}
+                <div className="project-text">
+                  <h3 className="project-title">
+                    {project.title}
+                  </h3>
+                  <p className="project-period">{project.period}</p>
+                  <p className="project-context">{project.context}</p>
+                  <p className="project-description">
+                    {project.description}
+                    {project.techStack && (
+                      <span className="project-tech-stack">
+                        {" "}<em>{project.techStack.join(" • ")}</em>
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Right: Screenshot and Links */}
+                <div className="project-right">
+                  {project.screenshot && (
+                    <div className="project-screenshot">
+                      <img
+                        src={project.screenshot}
+                        alt={`${project.title} screenshot`}
+                        className="project-image"
+                      />
+                    </div>
+                  )}
+                  
+                  <div className="project-links">
+                    {project.githubUrl && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="project-link github-link"
+                      >
+                        <FaGithub size={20} /> GitHub
+                      </a>
+                    )}
+                    {project.devpostUrl && (
+                      <a
+                        href={project.devpostUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="project-link devpost-link"
+                      >
+                        <span>Devpost</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section id="experiences" className="content-section">
