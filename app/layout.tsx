@@ -1,9 +1,10 @@
+// app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 import Header from "../components/header";
 
 export const metadata: Metadata = {
-  title: "Leo Zhang !",
+  title: "Leo Zhang",
   description: "My personal website",
   icons: {
     icon: [
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <Header /> {/* Site Header */}
+        <Header /> {/* Fixed header at top */}
         {children}
       </body>
     </html>

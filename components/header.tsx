@@ -7,21 +7,24 @@ const navItems = [
   { name: 'About Me', href: '#about-me' },
   { name: 'Projects', href: '#projects' },
   { name: 'Experiences', href: '#experiences' },
-  { name: 'Resume', href: '"\Leo_Zhang_Resume_External.pdf"' },
+  { name: 'Resume', href: '/Leo_Zhang_Resume_External.pdf' },
 ];
 
 const Header: FC = () => {
   const [showHeader, setShowHeader] = useState(true);
 
+  // Show header when near top, hide on scroll down
   useEffect(() => {
-    const threshold = 100; // pixels from top
+    let lastScrollY = 0;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setShowHeader(e.clientY <= threshold);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setShowHeader(currentScrollY < lastScrollY || currentScrollY < 50); // show if scrolling up or near top
+      lastScrollY = currentScrollY;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -33,24 +36,24 @@ const Header: FC = () => {
     >
       <div
         id="header-container"
-        className="max-w-[1400px] mx-auto flex justify-between items-center"
+        className="max-w-[1400px] mx-auto flex justify-between items-center px-6 py-3"
       >
         {/* Left: Name / Logo */}
-        <Link href="/" className="header-name">
+        <Link href="/" className="header-name text-lg font-bold text-white">
           Leo Zhang
         </Link>
 
         {/* Right: Navigation Links */}
         <nav
           id="header-nav"
-          className="flex flex-1 justify-evenly ml-10" // spread evenly
+          className="flex flex-1 justify-evenly ml-10"
         >
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               {...(item.name === 'Resume' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="header-link"
+              className="header-link text-white hover:text-gray-300 transition-colors"
             >
               {item.name}
             </Link>
