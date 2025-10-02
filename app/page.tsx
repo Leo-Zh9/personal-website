@@ -346,9 +346,11 @@ export default function HomePage() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <img
+                      <Image
                         src={exp.screenshot}
                         alt={`${exp.company} homepage screenshot`}
+                        width={300}
+                        height={200}
                         className="experience-image"
                       />
                     </a>
