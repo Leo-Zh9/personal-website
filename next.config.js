@@ -6,11 +6,17 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
-    unoptimized: true,
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'i.scdn.co',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.s3.amazonaws.com',
         port: '',
         pathname: '/**',
       },

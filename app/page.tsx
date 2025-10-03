@@ -7,6 +7,7 @@ import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
 import Prism from "../components/Prism";
 import BlurText from "../components/BlurText";
 import FadeContent from "../components/FadeContent";
+import { IMAGE_URLS } from "../lib/s3-config";
 
 interface Track {
   title: string;
@@ -48,7 +49,7 @@ const projects: Project[] = [
     devpostUrl: "https://devpost.com/software/preppin",
     context: "Built during StarterHacks 2024 hackathon - a 24-hour coding competition focused on solving real-world problems through innovative technology solutions.",
     techStack: ["Python", "Flask", "JavaScript", "HTML", "CSS", "OpenAI API", "Tesseract OCR"],
-    screenshot: "/preppin.png"
+    screenshot: IMAGE_URLS.preppin
   },
   // Add more projects here
 ];
@@ -61,8 +62,8 @@ const experiences: Experience[] = [
     companyUrl: "https://www.incendiumacademy.org/",
     period: "May 2025 – August 2025",
     description: "Incendium Academy is a non-profit that empowers students to explore entrepreneurship and technology through real-world projects. During my internship, I built and optimized web applications, automated workflows, and contributed to the development of scalable digital platforms. I implemented technical solutions that streamlined operations, improved user engagement, and supported the launch of student-driven initiatives.",
-    screenshot: "/incendium-academy.png",
-    techStack: ["JavaScript", "Python", "HTML", "SCSS"]
+    screenshot: IMAGE_URLS.incendiumAcademy,
+    techStack: ["JavaScript", "Python", "HTML", "CSS"]
   },
   // Add more experiences here
 ]; 
@@ -223,7 +224,7 @@ export default function HomePage() {
               >
                 <div className="profile-picture-container">
                   <Image 
-                    src="/about-me-picture.jpg" 
+                    src={IMAGE_URLS.aboutMe} 
                     alt="Leo Zhang" 
                     width={300}
                     height={300}
@@ -374,7 +375,7 @@ export default function HomePage() {
               <a href="https://github.com/Leo-Zh9" target="_blank" rel="noopener noreferrer">
                 <FaGithub size={22} /> <span>GitHub</span>
               </a>
-              <a href="/Leo_Zhang_Resume_External.pdf" target="_blank" rel="noopener noreferrer" className="resume-link">
+              <a href={IMAGE_URLS.resume} target="_blank" rel="noopener noreferrer" className="resume-link">
                 <span>📄 Resume</span>
               </a>
             </div>
