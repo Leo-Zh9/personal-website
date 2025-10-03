@@ -211,6 +211,9 @@ export default function HomePage() {
               <p>Music has been the other constant thread in this journey. Whether I'm coding at midnight or sketching out a new idea, there's always a soundtrack in the background. Music fuels my focus, sparks creativity, and keeps me in rhythm when I'm deep in flow. I've come to see coding and engineering the same way—as creative compositions, with structure and logic woven together to form something greater than the sum of its parts.</p>
               
               <p>Looking back, it all connects. LEGO gave me the spark, Scratch gave me the first tools, and programming gave me the freedom to dream bigger. Today, I carry those same passions forward: a love for building, a curiosity for solving problems, and the drive to create things that are as seamless and inspiring as the music I listen to every day.</p>
+              
+              {/* Spotify container moved inside about-me-text */}
+              <div id="spotify-container">{trackDetailsContent}</div>
             </div>
             
             <div className="about-me-image">
@@ -236,8 +239,6 @@ export default function HomePage() {
               </FadeContent>
             </div>
           </div>
-          
-          <div id="spotify-container">{trackDetailsContent}</div>
         </section>
 
         <section id="projects" className="content-section">
