@@ -9,7 +9,7 @@ export const s3Client = new S3Client({
   },
 });
 
-export const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || '';
+export const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME || 'leo-zhang-website';
 export const S3_BUCKET_URL = `https://${S3_BUCKET_NAME}.s3.amazonaws.com`;
 
 // Image URLs for your portfolio
