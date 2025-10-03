@@ -359,7 +359,7 @@ const Prism: React.FC<PrismProps> = ({
       
       // Skip animation updates if reduced motion is preferred
       if (prefersReducedMotion) {
-        renderer.render({ scene, camera });
+        renderer.render({ scene: mesh });
         return;
       }
 

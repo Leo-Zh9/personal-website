@@ -170,7 +170,7 @@ export default function HomePage() {
 
       <div id="home-screen-container">
         <BlurText
-          text="welcome to my website"
+          text="welcome, take a look around"
           delay={100}
           animateBy="letters"
           direction="top"
