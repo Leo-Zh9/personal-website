@@ -43,10 +43,10 @@ async function getAccessToken() {
       Authorization:
         "Basic " + Buffer.from(`${client_id}:${client_secret}`).toString("base64"),
     },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token,
-    }),
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refresh_token || "",
+    }),
     cache: "no-store", 
   });
 
