@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
+import { FaLinkedin, FaEnvelope } from 'react-icons/fa';
 
 const navItems = [
   { name: 'About Me', href: '#about-me' },
@@ -12,6 +13,8 @@ const navItems = [
 
 const Header: FC = () => {
   const [showHeader, setShowHeader] = useState(true);
+  const [showContactDropdown, setShowContactDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Show header when near top, hide on scroll down
   useEffect(() => {
@@ -25,6 +28,18 @@ const Header: FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle clicking outside dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowContactDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
@@ -58,6 +73,37 @@ const Header: FC = () => {
               {item.name}
             </Link>
           ))}
+          
+          {/* Contact Dropdown */}
+          <div className="relative flex items-center" ref={dropdownRef}>
+            <button
+              onClick={() => setShowContactDropdown(!showContactDropdown)}
+              className="contact-button"
+            >
+              Contact
+            </button>
+            
+            <div className={`contact-dropdown ${showContactDropdown ? 'contact-dropdown-open' : 'contact-dropdown-closed'}`}>
+              <a
+                href="mailto:leo.zhang@outlook.com"
+                className="contact-dropdown-item"
+                onClick={() => setShowContactDropdown(false)}
+              >
+                <FaEnvelope className="contact-dropdown-icon" />
+                Email
+              </a>
+              <a
+                href="https://www.linkedin.com/in/leozhang99"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-dropdown-item"
+                onClick={() => setShowContactDropdown(false)}
+              >
+                <FaLinkedin className="contact-dropdown-icon" />
+                LinkedIn
+              </a>
+            </div>
+          </div>
         </nav>
       </div>
     </header>

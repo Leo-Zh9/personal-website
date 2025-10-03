@@ -211,15 +211,21 @@ export default function HomePage() {
           
           <div className="about-me-content">
             <div className="about-me-text">
-              <p>My passion for creating started long before I ever wrote a line of code. As a kid, I spent hours building LEGO sets—not just following instructions but designing my own mechs, complete with moving parts and imagined battles. Those moments sparked my love for engineering, because it wasn't just play—it was problem-solving, designing, and pushing the limits of what I could make with the pieces in front of me.</p>
+              <p><strong>Hey, I'm Leo!</strong></p>
               
-              <p>That same curiosity carried over when I discovered Scratch. Suddenly, I could build not just physical creations, but digital ones. Dragging colorful blocks across the screen to make games and animations gave me the same thrill as snapping LEGO bricks together. But it also opened my eyes to something bigger: the power to invent without limits. With Scratch, I wasn't confined to a box of parts—I had an infinite canvas.</p>
+              <p>I'm currently studying <strong>Systems Design Engineering</strong> at the <strong>University of Waterloo</strong>.</p>
               
-              <p>From there, I dove into Python, Java, and C++, constantly chasing that same feeling of creation and challenge. I built projects that tested my patience and grit, like a chess engine that took weeks to get right, but rewarded me with the satisfaction of seeing it "think" on its own. What started as LEGO mechs and Scratch sprites turned into algorithms, web apps, and prototypes that stretched my imagination further each time.</p>
+              <p>I'm passionate about solving complex problems through technology and design, blending software development, AI, and systems thinking to create impactful solutions.</p>
               
-              <p>Music has been the other constant thread in this journey. Whether I'm coding at midnight or sketching out a new idea, there's always a soundtrack in the background. Music fuels my focus, sparks creativity, and keeps me in rhythm when I'm deep in flow. I've come to see coding and engineering the same way—as creative compositions, with structure and logic woven together to form something greater than the sum of its parts.</p>
+              <p>My passion for creating started long before I ever wrote a line of code. As a kid, I spent hours building LEGO sets—not just following instructions, but designing my own mechs with moving parts and imagined battles. Those early projects sparked my love for engineering because they were more than play—they were problem-solving, designing, and pushing the limits of what I could build.</p>
               
-              <p>Looking back, it all connects. LEGO gave me the spark, Scratch gave me the first tools, and programming gave me the freedom to dream bigger. Today, I carry those same passions forward: a love for building, a curiosity for solving problems, and the drive to create things that are as seamless and inspiring as the music I listen to every day.</p>
+              <p>That same curiosity carried over when I discovered Scratch. Suddenly, I could create not just physical structures, but digital ones. Dragging colorful blocks to make games and animations gave me the same thrill as snapping LEGO bricks together. But it also revealed something bigger: the power to invent without limits. With Scratch, I wasn't confined to a box of parts—I had an infinite canvas.</p>
+              
+              <p>From there, I dove into Python, Java, and C++, constantly chasing that feeling of creation and challenge. I built projects that tested my patience and grit—like a chess engine that took weeks to perfect—but rewarded me with the satisfaction of seeing it "think" on its own. What started as LEGO mechs and Scratch sprites evolved into algorithms, web apps, and prototypes that stretched my imagination further each time.</p>
+              
+              <p>Music has always been a thread in this journey. Whether I'm coding late at night or sketching a new idea, there's a soundtrack in the background. Music fuels my focus, sparks creativity, and keeps me in rhythm when I'm deep in flow. I've come to see coding and engineering the same way: as creative compositions, with structure and logic woven together to form something greater than the sum of its parts.</p>
+              
+              <p>Looking back, it all connects. LEGO sparked the curiosity, Scratch gave me the first tools, and programming gave me the freedom to dream bigger. Today, I carry those passions forward: a love for building, a curiosity for solving problems, and the drive to create things that are as seamless and inspiring as the music I listen to every day.</p>
               
               {/* Spotify container moved inside about-me-text */}
               <div id="spotify-container">{trackDetailsContent}</div>
@@ -381,7 +387,7 @@ export default function HomePage() {
           <div id="socials-container">
             <p>Connect with me:</p>
             <div id="social-icons">
-              <a href="https://www.linkedin.com/in/leo-zhang-047326283/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.linkedin.com/in/leozhang99" target="_blank" rel="noopener noreferrer">
                 <FaLinkedin size={22} /> <span>LinkedIn</span>
               </a>
               <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer">

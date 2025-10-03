@@ -29,17 +29,17 @@ const PerformanceMonitor: React.FC = () => {
       entries.forEach((entry) => {
         if (entry.entryType === 'paint') {
           if (entry.name === 'first-contentful-paint') {
-            setMetrics(prev => ({ ...prev, fcp: entry.startTime } as PerformanceMetrics }));
+            setMetrics(prev => ({ ...prev, fcp: entry.startTime } as PerformanceMetrics));
           }
         }
         
         if (entry.entryType === 'largest-contentful-paint') {
-          setMetrics(prev => ({ ...prev, lcp: entry.startTime } as PerformanceMetrics }));
+          setMetrics(prev => ({ ...prev, lcp: entry.startTime } as PerformanceMetrics));
         }
         
         if (entry.entryType === 'layout-shift') {
           const cls = (entry as any).value;
-          setMetrics(prev => ({ ...prev, cls } as PerformanceMetrics }));
+          setMetrics(prev => ({ ...prev, cls } as PerformanceMetrics));
         }
       });
     });
@@ -49,7 +49,7 @@ const PerformanceMonitor: React.FC = () => {
     // Measure page load time
     window.addEventListener('load', () => {
       const loadTime = performance.now();
-      setMetrics(prev => ({ ...prev, loadTime } as PerformanceMetrics }));
+      setMetrics(prev => ({ ...prev, loadTime } as PerformanceMetrics));
     });
 
     return () => {
