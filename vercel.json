@@ -6,7 +6,7 @@
   },
   "headers": [
     {
-      "source": "/_next/image(.*)",
+      "source": "/_next/image/:path*",
       "headers": [
         {
           "key": "Cache-Control",
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(pdf))",
+      "source": "/:path*\\.pdf",
       "headers": [
         {
           "key": "Cache-Control",
