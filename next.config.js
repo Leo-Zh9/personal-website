@@ -6,7 +6,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; img-src 'self' data: https:; script-src 'none'; sandbox;",
+    contentSecurityPolicy: "default-src 'self'; img-src 'self' data: https: blob:; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
