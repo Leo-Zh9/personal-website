@@ -50,6 +50,15 @@ const projects: Project[] = [
     techStack: ["Python", "Flask", "JavaScript", "HTML", "CSS", "OpenAI API", "Tesseract OCR"],
     screenshot: "/preppin.png"
   },
+  {
+    title: "Personal Website",
+    description: "A modern, responsive personal portfolio website built with Next.js 15, featuring dynamic animations, Spotify integration, and a clean, professional design. Showcases projects, experiences, and technical skills with interactive elements and smooth transitions.",
+    period: "October 2024",
+    githubUrl: "https://github.com/Leo-Zh9/personal-website",
+    context: "Built as a comprehensive portfolio to showcase my development skills and professional experiences.",
+    techStack: ["Next.js", "React", "TypeScript", "CSS3", "Vercel", "Spotify API"],
+    screenshot: "/propeller-hat.png"
+  },
   // Add more projects here
 ];
 
@@ -63,6 +72,13 @@ const experiences: Experience[] = [
     description: "Incendium Academy is a non-profit that empowers students to explore entrepreneurship and technology through real-world projects. During my internship, I built and optimized web applications, automated workflows, and contributed to the development of scalable digital platforms. I implemented technical solutions that streamlined operations, improved user engagement, and supported the launch of student-driven initiatives.",
     screenshot: "/incendium-academy.png",
     techStack: ["JavaScript", "Python", "HTML", "SCSS"]
+  },
+  {
+    title: "Student Developer",
+    company: "University Projects",
+    period: "2023 – Present",
+    description: "Engaged in various academic and personal development projects, building full-stack applications, learning new technologies, and contributing to open-source projects. Focused on web development, algorithms, and software engineering best practices.",
+    techStack: ["Java", "Python", "C++", "React", "Node.js", "SQL"]
   },
   // Add more experiences here
 ]; 
