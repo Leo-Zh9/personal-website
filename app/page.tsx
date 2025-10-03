@@ -3,11 +3,18 @@
 import { useEffect, useState } from 'react';
 import Head from "next/head";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
-import Prism from "../components/Prism";
 import BlurText from "../components/BlurText";
 import FadeContent from "../components/FadeContent";
+import PerformanceMonitor from "../components/PerformanceMonitor";
 import { IMAGE_URLS } from "../lib/s3-config";
+
+// Lazy load the heavy Prism component
+const Prism = dynamic(() => import("../components/Prism"), {
+  ssr: false,
+  loading: () => <div style={{ width: '100%', height: '100vh', background: 'linear-gradient(45deg, #1f2937, #374151)' }} />
+});
 
 interface Track {
   title: string;
@@ -143,7 +150,8 @@ export default function HomePage() {
 
   return (
     <>
-
+      <PerformanceMonitor />
+      
       {/* Click Sparks */}
       <div className="sparks-container">
         {sparks.map((spark) => (
@@ -181,7 +189,7 @@ export default function HomePage() {
         }}>
           <Prism
             animationType="rotate"
-            timeScale={0.4}
+            timeScale={0.2}
             height={3.0}
             baseWidth={5.5}
             scale={2.8}
@@ -191,7 +199,8 @@ export default function HomePage() {
             glow={0.8}
             bloom={1}
             transparent={true}
-            suspendWhenOffscreen={false}
+            suspendWhenOffscreen={true}
+            reducedMotion={false}
           />
         </div>
       </div>
@@ -226,14 +235,16 @@ export default function HomePage() {
                 threshold={0.2}
               >
                 <div className="profile-picture-container">
-                  <Image 
-                    src={IMAGE_URLS.aboutMe} 
-                    alt="Leo Zhang" 
-                    width={300}
-                    height={300}
-                    className="profile-picture"
-                    priority
-                  />
+        <Image
+          src={IMAGE_URLS.aboutMe}
+          alt="Leo Zhang"
+          width={300}
+          height={300}
+          className="profile-picture"
+          priority
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+        />
                   <p className="profile-caption">Little Leo really enjoyed watching TV and building Lego mechs</p>
                 </div>
               </FadeContent>
@@ -274,6 +285,9 @@ export default function HomePage() {
                         width={300}
                         height={200}
                         className="project-image"
+                        loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
                       />
                     </div>
                   )}

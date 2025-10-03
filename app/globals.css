@@ -7,6 +7,20 @@ code, pre, kbd, samp {
   font-weight: 400;
 }
 
+/* Performance optimizations */
+* {
+  will-change: auto;
+}
+
+/* Optimize animations for better performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Reset + base styles */
 html,
 body {

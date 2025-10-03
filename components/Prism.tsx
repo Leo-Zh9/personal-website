@@ -18,6 +18,7 @@ type PrismProps = {
   bloom?: number;
   suspendWhenOffscreen?: boolean;
   timeScale?: number;
+  reducedMotion?: boolean;
 };
 
 const Prism: React.FC<PrismProps> = ({
@@ -35,7 +36,8 @@ const Prism: React.FC<PrismProps> = ({
   inertia = 0.05,
   bloom = 1,
   suspendWhenOffscreen = false,
-  timeScale = 0.5
+  timeScale = 0.5,
+  reducedMotion = false
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,7 +64,10 @@ const Prism: React.FC<PrismProps> = ({
     const HOVSTR = Math.max(0, hoverStrength || 1);
     const INERT = Math.max(0, Math.min(1, inertia || 0.12));
 
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    // Check for reduced motion preference
+    const prefersReducedMotion = reducedMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    const dpr = prefersReducedMotion ? 1 : Math.min(2, window.devicePixelRatio || 1);
     const renderer = new Renderer({
       dpr,
       alpha: transparent,
@@ -351,6 +356,12 @@ const Prism: React.FC<PrismProps> = ({
     const render = (t: number) => {
       const time = (t - t0) * 0.001;
       program.uniforms.iTime.value = time;
+      
+      // Skip animation updates if reduced motion is preferred
+      if (prefersReducedMotion) {
+        renderer.render({ scene, camera });
+        return;
+      }
 
       let continueRAF = true;
 
@@ -449,7 +460,8 @@ const Prism: React.FC<PrismProps> = ({
     hoverStrength,
     inertia,
     bloom,
-    suspendWhenOffscreen
+    suspendWhenOffscreen,
+    reducedMotion
   ]);
 
   return <div className="prism-container" ref={containerRef} />;

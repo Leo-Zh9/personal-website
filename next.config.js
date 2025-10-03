@@ -27,6 +27,26 @@ const nextConfig = {
   trailingSlash: false,
   // Increase build timeout for large images
   staticPageGenerationTimeout: 1000,
+  experimental: {
+    optimizePackageImports: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
+  },
+  webpack: (config, { isServer }) => {
+    // Optimize bundle size
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    
+    // Tree shaking optimization
+    config.optimization.usedExports = true;
+    config.optimization.sideEffects = false;
+    
+    return config;
+  },
 }
 
 module.exports = nextConfig
