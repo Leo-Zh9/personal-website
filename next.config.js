@@ -16,7 +16,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '*.s3.amazonaws.com',
+        hostname: 'leo-zhang-website.s3.us-east-1.amazonaws.com',
         port: '',
         pathname: '/**',
       },
