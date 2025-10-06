@@ -49,6 +49,16 @@ interface Project {
 // Add projects here
 const projects: Project[] = [
   {
+    title: "Bridgette",
+    description: "A data integration platform that seamlessly unifies multiple bank datasets—regardless of format or schema—into one clean, actionable spreadsheet. Bridgette uses AI-powered schema mapping to automatically detect data types and headers, handling .json, .csv, and .xlsx files from different organizations while ensuring data integrity and completeness.",
+    period: "October 2025",
+    githubUrl: "https://github.com/Leo-Zh9/bridgette",
+    devpostUrl: "https://devpost.com/software/bridgette",
+    context: "Built for the EY Canada - Data Integration Challenge during Hack the Valley X. This solution addresses the critical need for financial institutions to consolidate disparate data sources into unified, actionable insights.",
+    techStack: ["Python", "Flask", "React", "OpenAI API", "Pandas", "Docker", "JavaScript", "HTML", "CSS"],
+    screenshot: IMAGE_URLS.bridgette
+  },
+  {
     title: "Preppin'",
     description: "An AI-powered meal planning and delivery service that creates personalized recipes based on available ingredients and dietary needs. Users can upload grocery receipts or manually enter ingredients, and the system generates tailored meal plans with convenient grocery delivery options.",
     period: "July 2024",
@@ -170,7 +180,7 @@ export default function HomePage() {
 
       <div id="home-screen-container">
         <BlurText
-          text="welcome, take a look around"
+          text="welcome, take a look around!"
           delay={100}
           animateBy="letters"
           direction="top"

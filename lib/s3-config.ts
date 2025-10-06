@@ -15,6 +15,7 @@ export const S3_BUCKET_URL = `https://${S3_BUCKET_NAME}.s3.us-east-1.amazonaws.c
 // Image URLs for your portfolio
 export const IMAGE_URLS = {
   aboutMe: `${S3_BUCKET_URL}/about-me-picture.jpg`,
+  bridgette: `${S3_BUCKET_URL}/bridgette.png`,
   preppin: `${S3_BUCKET_URL}/preppin.png`,
   incendiumAcademy: `${S3_BUCKET_URL}/incendium-academy.png`,
   propellerHat: `${S3_BUCKET_URL}/propeller-hat.png`,
