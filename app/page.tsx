@@ -5,10 +5,15 @@ import Head from "next/head";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiJavascript, SiHtml5, SiCss3, SiFlask, SiDocker, SiPandas, SiOpenai } from "react-icons/si";
 import BlurText from "../components/BlurText";
 import FadeContent from "../components/FadeContent";
-import PerformanceMonitor from "../components/PerformanceMonitor";
+import LogoLoop from "../components/LogoLoop";
+import FloatingParticles from "../components/FloatingParticles";
+import LoadingScreen from "../components/LoadingScreen";
 import { IMAGE_URLS } from "../lib/s3-config";
+import { useLinkedInProfile } from "../lib/use-linkedin-profile";
+import { LINKEDIN_CONFIG } from "../lib/linkedin-config";
 
 // Lazy load the heavy Prism component
 const Prism = dynamic(() => import("../components/Prism"), {
@@ -85,9 +90,28 @@ const experiences: Experience[] = [
   // Add more experiences here
 ]; 
 
+// Tech logos for LogoLoop
+const techLogos = [
+  { node: <SiReact />, title: "React", href: "https://react.dev" },
+  { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
+  { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+  { node: <SiPython />, title: "Python", href: "https://python.org" },
+  { node: <SiJavascript />, title: "JavaScript", href: "https://javascript.info" },
+  { node: <SiHtml5 />, title: "HTML5", href: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+  { node: <SiCss3 />, title: "CSS3", href: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+  { node: <SiFlask />, title: "Flask", href: "https://flask.palletsprojects.com" },
+  { node: <SiDocker />, title: "Docker", href: "https://docker.com" },
+  { node: <SiPandas />, title: "Pandas", href: "https://pandas.pydata.org" },
+  { node: <SiOpenai />, title: "OpenAI", href: "https://openai.com" },
+];
+
 export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
-  const [sparks, setSparks] = useState<Array<{x: number, y: number, id: number, angle: number, velocity: number}>>([]); 
+  const [sparks, setSparks] = useState<Array<{x: number, y: number, id: number, angle: number, velocity: number}>>([]);
+  const { profileData, loading: profileLoading, error: profileError } = useLinkedInProfile();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isContentVisible, setIsContentVisible] = useState(false);
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -105,6 +129,19 @@ export default function HomePage() {
     fetchTrack();
     const interval = setInterval(fetchTrack, 10000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle loading completion
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      // Delay content visibility for smooth transition
+      setTimeout(() => {
+        setIsContentVisible(true);
+      }, 500);
+    }, 3000); // Show loading screen for at least 3 seconds
+
+    return () => clearTimeout(timer);
   }, []);
 
 
@@ -148,7 +185,7 @@ export default function HomePage() {
 
   const trackDetailsContent = track ? (
     <a href={track.songUrl} target="_blank" rel="noopener noreferrer">
-      <Image id="track-album" src={track.albumImageUrl} alt={`${track.title} album cover`} width={64} height={64} />
+      <Image id="track-album" src={track.albumImageUrl} alt={`${track.title} album cover`} width={250} height={250} />
       <div id="track-details-text">
         <span id="listening-prefix">I'm currently listening to: </span>
         <span id="track-title-formatted">{track.title}</span>
@@ -160,7 +197,19 @@ export default function HomePage() {
 
   return (
     <>
-      <PerformanceMonitor />
+      {/* Loading Screen */}
+      {isLoading && (
+        <LoadingScreen onLoadComplete={() => setIsLoading(false)} />
+      )}
+      
+      {/* Floating Particles Background */}
+      <FloatingParticles 
+        particleCount={40}
+        speed={0.2}
+        size={2}
+        opacity={0.6}
+        colors={['#ffffff', '#60a5fa', '#34d399', '#fbbf24', '#f472b6', '#a78bfa']}
+      />
       
       {/* Click Sparks */}
       <div className="sparks-container">
@@ -178,7 +227,9 @@ export default function HomePage() {
         ))}
       </div>
 
-      <div id="home-screen-container">
+      {/* Main Content with Fade-in */}
+      <div className={`main-content ${isContentVisible ? 'fade-in' : ''}`}>
+        <div id="home-screen-container">
         <BlurText
           text="welcome, take a look around!"
           delay={100}
@@ -236,34 +287,38 @@ export default function HomePage() {
               <p>Music has always been a thread in this journey. Whether I'm coding late at night or sketching a new idea, there's a soundtrack in the background. Music fuels my focus, sparks creativity, and keeps me in rhythm when I'm deep in flow. I've come to see coding and engineering the same way: as creative compositions, with structure and logic woven together to form something greater than the sum of its parts.</p>
               
               <p>Looking back, it all connects. LEGO sparked the curiosity, Scratch gave me the first tools, and programming gave me the freedom to dream bigger. Today, I carry those passions forward: a love for building, a curiosity for solving problems, and the drive to create things that are as seamless and inspiring as the music I listen to every day.</p>
-              
-              {/* Spotify container moved inside about-me-text */}
-              <div id="spotify-container">{trackDetailsContent}</div>
             </div>
             
-            <div className="about-me-image">
-              <FadeContent 
-                blur={true} 
-                duration={1200} 
-                easing="ease-out" 
-                initialOpacity={0}
-                delay={300}
-                threshold={0.2}
-              >
-                <div className="profile-picture-container">
-        <Image
-          src={IMAGE_URLS.aboutMe}
-          alt="Leo Zhang"
-          width={300}
-          height={300}
-          className="profile-picture"
-          priority
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-        />
-                  <p className="profile-caption">Little Leo really enjoyed watching TV and building Lego mechs</p>
-                </div>
-              </FadeContent>
+            <div className="about-me-right">
+              <div className="about-me-image">
+                <FadeContent 
+                  blur={true} 
+                  duration={1200} 
+                  easing="ease-out" 
+                  initialOpacity={0}
+                  delay={300}
+                  threshold={0.2}
+                >
+                  <div className="profile-picture-container">
+                    <Image
+                      src={IMAGE_URLS.aboutMe}
+                      alt="Leo Zhang"
+                      width={300}
+                      height={300}
+                      className="profile-picture"
+                      priority
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    />
+                    <p className="profile-caption">Little Leo really enjoyed watching TV and building Lego mechs</p>
+                  </div>
+                </FadeContent>
+              </div>
+              
+              {/* Spotify section as separate element */}
+              <div className="spotify-section">
+                <div id="spotify-container">{trackDetailsContent}</div>
+              </div>
             </div>
           </div>
         </section>
@@ -298,8 +353,8 @@ export default function HomePage() {
                       <Image
                         src={project.screenshot}
                         alt={`${project.title} screenshot`}
-                        width={300}
-                        height={200}
+                        width={450}
+                        height={300}
                         className="project-image"
                         loading="lazy"
                         placeholder="blur"
@@ -335,6 +390,23 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* Tech Stack Logo Loop */}
+        <div className="tech-logos-section">
+          <LogoLoop
+            logos={techLogos}
+            speed={80}
+            direction="left"
+            logoHeight={40}
+            gap={50}
+            pauseOnHover
+            scaleOnHover
+            fadeOut
+            fadeOutColor="#000000"
+            ariaLabel="Technologies I work with"
+            style={{ height: '80px', margin: '20px 0' }}
+          />
+        </div>
 
         <section id="experiences" className="content-section">
           <h2 className="section-title">Experiences</h2>
@@ -393,26 +465,77 @@ export default function HomePage() {
           </div>
         </section>
 
-        <footer id="footer">
-          <div id="socials-container">
-            <p>Connect with me:</p>
-            <div id="social-icons">
-              <a href="https://www.linkedin.com/in/leozhang99" target="_blank" rel="noopener noreferrer">
-                <FaLinkedin size={22} /> <span>LinkedIn</span>
-              </a>
-              <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer">
-                <FaTwitter size={22} /> <span>Twitter/X</span>
-              </a>
-              <a href="https://github.com/Leo-Zh9" target="_blank" rel="noopener noreferrer">
-                <FaGithub size={22} /> <span>GitHub</span>
-              </a>
-              <a href={IMAGE_URLS.resume} target="_blank" rel="noopener noreferrer" className="resume-link">
-                <span>📄 Resume</span>
-              </a>
+        <section id="connect" className="content-section">
+          <h2 className="section-title">Connect with Me</h2>
+          
+          <div className="connect-content">
+            <div className="connect-text">
+              <p><strong>Let's connect!</strong></p>
+              <p>I'm always interested in meeting new people and exploring opportunities in technology and engineering.</p>
+              
+              <div className="social-links">
+                <a href="https://www.linkedin.com/in/leozhang99" target="_blank" rel="noopener noreferrer" className="social-link linkedin-link">
+                  <FaLinkedin size={24} /> 
+                  <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/Leo-Zh9" target="_blank" rel="noopener noreferrer" className="social-link github-link">
+                  <FaGithub size={24} /> 
+                  <span>GitHub</span>
+                </a>
+                <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer" className="social-link twitter-link">
+                  <FaTwitter size={24} /> 
+                  <span>Twitter/X</span>
+                </a>
+                <a href={IMAGE_URLS.resume} target="_blank" rel="noopener noreferrer" className="social-link resume-link">
+                  <span>📄 Resume</span>
+                </a>
+              </div>
+            </div>
+            
+            <div className="connect-image">
+              <FadeContent 
+                blur={true} 
+                duration={1200} 
+                easing="ease-out" 
+                initialOpacity={0}
+                delay={300}
+                threshold={0.2}
+              >
+                <div className="linkedin-profile-container">
+                  <Image
+                    src={profileData?.profileImageUrl || LINKEDIN_CONFIG.fallbackImageUrl}
+                    alt="Leo Zhang - LinkedIn Profile"
+                    width={250}
+                    height={250}
+                    className="linkedin-profile-picture"
+                    priority
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  />
+                  <p className="linkedin-caption">
+                    {profileData?.fallback 
+                      ? "Connect with me on LinkedIn!" 
+                      : "Current LinkedIn profile picture - always up to date!"
+                    }
+                  </p>
+                  {profileData?.lastUpdated && LINKEDIN_CONFIG.showUpdateInfo && (
+                    <p className="linkedin-update-info">
+                      Last updated: {new Date(profileData.lastUpdated).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+              </FadeContent>
             </div>
           </div>
-        </footer>
+        </section>
+        
+        {/* Connect section divider */}
+        <div className="connect-divider"></div>
+        
+        {/* Final white line */}
+        <div className="final-divider"></div>
       </main>
+      </div>
     </>
   );
 }

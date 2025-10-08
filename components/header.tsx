@@ -1,20 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { FC, useState, useEffect, useRef } from 'react';
-import { FaLinkedin, FaEnvelope } from 'react-icons/fa';
+import { FC, useState, useEffect } from 'react';
 
 const navItems = [
   { name: 'About Me', href: '#about-me' },
   { name: 'Projects', href: '#projects' },
   { name: 'Experiences', href: '#experiences' },
+  { name: 'Connect', href: '#connect' },
   { name: 'Resume', href: '/Leo_Zhang_Resume_External.pdf' },
 ];
 
 const Header: FC = () => {
   const [showHeader, setShowHeader] = useState(true);
-  const [showContactDropdown, setShowContactDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Show header when near top, hide on scroll down
   useEffect(() => {
@@ -30,17 +28,14 @@ const Header: FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle clicking outside dropdown to close it
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowContactDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Smooth scroll to top function
+  const handleScrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   return (
     <header
@@ -54,7 +49,11 @@ const Header: FC = () => {
         className="max-w-[1400px] mx-auto flex justify-between items-center px-6 py-3"
       >
         {/* Left: Name / Logo */}
-        <Link href="/" className="header-name text-lg font-bold text-white">
+        <Link 
+          href="#" 
+          className="header-name text-lg font-bold text-white hover:text-gray-300 transition-colors"
+          onClick={handleScrollToTop}
+        >
           Leo Zhang
         </Link>
 
@@ -73,37 +72,6 @@ const Header: FC = () => {
               {item.name}
             </Link>
           ))}
-          
-          {/* Contact Dropdown */}
-          <div className="relative flex items-center" ref={dropdownRef}>
-            <button
-              onClick={() => setShowContactDropdown(!showContactDropdown)}
-              className="contact-button"
-            >
-              Contact
-            </button>
-            
-            <div className={`contact-dropdown ${showContactDropdown ? 'contact-dropdown-open' : 'contact-dropdown-closed'}`}>
-              <a
-                href="mailto:leo.zhang@outlook.com"
-                className="contact-dropdown-item"
-                onClick={() => setShowContactDropdown(false)}
-              >
-                <FaEnvelope className="contact-dropdown-icon" />
-                Email
-              </a>
-              <a
-                href="https://www.linkedin.com/in/leozhang99"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="contact-dropdown-item"
-                onClick={() => setShowContactDropdown(false)}
-              >
-                <FaLinkedin className="contact-dropdown-icon" />
-                LinkedIn
-              </a>
-            </div>
-          </div>
         </nav>
       </div>
     </header>
