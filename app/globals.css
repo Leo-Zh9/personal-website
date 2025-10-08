@@ -497,7 +497,8 @@ h1, h2, h3, h4, h5, h6 {
   .section-title {
     font-size: 3rem;
     padding-top: 50px;
-    margin-top: -60px;
+    margin-top: -40px;
+    margin-bottom: 30px;
   }
   
   .about-me-content {
@@ -607,14 +608,19 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile Large (481px - 767px) */
 @media (max-width: 767px) and (min-width: 481px) {
+  #scrollable-content {
+    padding-top: 100px;
+  }
   .content-section {
     padding: 50px 20px;
+    margin-top: 20px;
   }
   
   .section-title {
     font-size: 2.5rem;
     padding-top: 40px;
-    margin-top: -50px;
+    margin-top: -30px;
+    margin-bottom: 30px;
   }
   
   .about-me-content {
@@ -675,6 +681,7 @@ h1, h2, h3, h4, h5, h6 {
   .project-item {
     flex-direction: column;
     gap: 15px;
+    margin-bottom: 30px;
   }
   
   .project-text {
@@ -695,6 +702,7 @@ h1, h2, h3, h4, h5, h6 {
   .experience-item {
     flex-direction: column;
     gap: 15px;
+    margin-bottom: 30px;
   }
   
   .experience-text {
@@ -781,19 +789,25 @@ h1, h2, h3, h4, h5, h6 {
     flex-direction: column;
     gap: 10px;
     padding: 15px 20px;
+    min-height: 100px;
   }
 }
 
 /* Mobile Small (320px - 480px) */
 @media (max-width: 480px) {
+  #scrollable-content {
+    padding-top: 90px;
+  }
   .content-section {
     padding: 40px 15px;
+    margin-top: 15px;
   }
   
   .section-title {
     font-size: 2rem;
     padding-top: 30px;
-    margin-top: -40px;
+    margin-top: -20px;
+    margin-bottom: 25px;
   }
   
   .about-me-content {
@@ -859,6 +873,7 @@ h1, h2, h3, h4, h5, h6 {
   .project-item {
     flex-direction: column;
     gap: 12px;
+    margin-bottom: 25px;
   }
   
   .project-text {
@@ -879,6 +894,7 @@ h1, h2, h3, h4, h5, h6 {
   .experience-item {
     flex-direction: column;
     gap: 12px;
+    margin-bottom: 25px;
   }
   
   .experience-text {
@@ -965,6 +981,7 @@ h1, h2, h3, h4, h5, h6 {
     flex-direction: column;
     gap: 8px;
     padding: 12px 15px;
+    min-height: 90px;
   }
   
   .loading-name {
