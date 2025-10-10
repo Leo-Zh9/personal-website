@@ -2,6 +2,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Header from "../components/header";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Leo Zhang",
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Header /> {/* Fixed header at top */}
         {children}
+        <Analytics />
       </body>
     </html>
   );
