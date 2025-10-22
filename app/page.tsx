@@ -119,15 +119,33 @@ export default function HomePage() {
   const [totalVisitors, setTotalVisitors] = useState<number>(0);
   const [totalSongs, setTotalSongs] = useState<number>(0);
 
-  // Track visitor on page load
+  // Track visitor on page load (only once per session)
   useEffect(() => {
+    const hasTrackedVisitor = sessionStorage.getItem('visitorTracked');
+    
     const trackVisitor = async () => {
+      if (hasTrackedVisitor) {
+        // Already tracked in this session, just fetch the count
+        try {
+          const res = await fetch('/api/stats');
+          if (res.ok) {
+            const data = await res.json();
+            setTotalVisitors(data.totalVisitors);
+          }
+        } catch (err) {
+          console.error('Error fetching stats:', err);
+        }
+        return;
+      }
+
       try {
         const res = await fetch('/api/visitor', { method: 'POST' });
         if (res.ok) {
           const data = await res.json();
           setVisitorNumber(data.visitorNumber);
           setTotalVisitors(data.totalVisitors);
+          // Mark as tracked in this session
+          sessionStorage.setItem('visitorTracked', 'true');
         }
       } catch (err) {
         console.error('Error tracking visitor:', err);
