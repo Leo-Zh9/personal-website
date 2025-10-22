@@ -11,6 +11,7 @@ import FadeContent from "../components/FadeContent";
 import LogoLoop from "../components/LogoLoop";
 import FloatingParticles from "../components/FloatingParticles";
 import LoadingScreen from "../components/LoadingScreen";
+import CountUp from "../components/CountUp";
 import { IMAGE_URLS } from "../lib/s3-config";
 import { useLinkedInProfile } from "../lib/use-linkedin-profile";
 import { LINKEDIN_CONFIG } from "../lib/linkedin-config";
@@ -344,26 +345,25 @@ export default function HomePage() {
       <main id="scrollable-content">
         {/* Live Statistics Section */}
         <section id="stats" className="stats-section">
-          <div className="stats-container">
+          <div className="stats-main">
+            <div className="stats-main-label">Total Visitors</div>
+            <CountUp 
+              end={totalVisitors} 
+              duration={2500} 
+              className="stats-main-value"
+            />
+          </div>
+          
+          <div className="stats-sub-container">
             {visitorNumber && (
-              <div className="stat-item highlight-stat">
-                <div className="stat-content">
-                  <div className="stat-label">You are visitor</div>
-                  <div className="stat-value">#{visitorNumber.toLocaleString()}</div>
-                </div>
+              <div className="stat-sub-item">
+                <div className="stat-sub-label">You are visitor</div>
+                <div className="stat-sub-value">#{visitorNumber.toLocaleString()}</div>
               </div>
             )}
-            <div className="stat-item">
-              <div className="stat-content">
-                <div className="stat-label">Total Visitors</div>
-                <div className="stat-value">{totalVisitors.toLocaleString()}</div>
-              </div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-content">
-                <div className="stat-label">Songs Recommended</div>
-                <div className="stat-value">{totalSongs.toLocaleString()}</div>
-              </div>
+            <div className="stat-sub-item">
+              <div className="stat-sub-label">Songs Recommended</div>
+              <div className="stat-sub-value">{totalSongs.toLocaleString()}</div>
             </div>
           </div>
         </section>
