@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 
+// API endpoint to save song recommendations to MongoDB
 export async function POST(request: Request) {
   try {
     const { song } = await request.json();
