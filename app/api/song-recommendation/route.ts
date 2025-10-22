@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import clientPromise from '../../../lib/mongodb';
 
 export async function POST(request: Request) {
   try {
@@ -13,17 +12,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create the file path for song recommendations
-    const filePath = path.join(process.cwd(), 'song-recommendations.txt');
+    // Connect to MongoDB
+    const client = await clientPromise;
+    const db = client.db('personalWebsite');
+    const collection = db.collection('songRecommendations');
     
-    // Get current timestamp
-    const timestamp = new Date().toISOString();
+    // Create document to insert
+    const recommendation = {
+      song: song.trim(),
+      timestamp: new Date(),
+      createdAt: new Date().toISOString(),
+    };
     
-    // Format the entry
-    const entry = `[${timestamp}] ${song.trim()}\n`;
-    
-    // Append to file (create if doesn't exist)
-    await fs.appendFile(filePath, entry, 'utf8');
+    // Insert the recommendation
+    await collection.insertOne(recommendation);
     
     return NextResponse.json(
       { success: true, message: 'Song recommendation saved!' },
