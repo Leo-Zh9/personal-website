@@ -185,16 +185,31 @@ export default function HomePage() {
   }, []);
 
   // Handle song recommendation submission
-  const handleSongSubmit = (e: React.FormEvent) => {
+  const handleSongSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (songRecommendation.trim()) {
-      setShowThankYouPopup(true);
-      setSongRecommendation('');
-      
-      // Hide popup after 3 seconds
-      setTimeout(() => {
-        setShowThankYouPopup(false);
-      }, 3000);
+      try {
+        // Send to API
+        const response = await fetch('/api/song-recommendation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ song: songRecommendation }),
+        });
+        
+        if (response.ok) {
+          setShowThankYouPopup(true);
+          setSongRecommendation('');
+          
+          // Hide popup after 3 seconds
+          setTimeout(() => {
+            setShowThankYouPopup(false);
+          }, 3000);
+        }
+      } catch (error) {
+        console.error('Error submitting song recommendation:', error);
+      }
     }
   };
 
@@ -213,6 +228,15 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Thank You Popup - at top level for proper display */}
+      {showThankYouPopup && (
+        <div className="thank-you-popup">
+          <div className="thank-you-popup-content">
+            <p>Thanks for the recommendation, I'll check this out!</p>
+          </div>
+        </div>
+      )}
+      
       {/* Loading Screen */}
       {isLoading && (
         <LoadingScreen onLoadComplete={() => setIsLoading(false)} />
@@ -568,15 +592,6 @@ export default function HomePage() {
         {/* Final white line */}
         <div className="final-divider"></div>
       </main>
-      
-      {/* Thank You Popup */}
-      {showThankYouPopup && (
-        <div className="thank-you-popup">
-          <div className="thank-you-popup-content">
-            <p>Thanks for the recommendation, I'll check this out!</p>
-          </div>
-        </div>
-      )}
       </div>
     </>
   );
