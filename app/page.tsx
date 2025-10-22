@@ -383,18 +383,14 @@ export default function HomePage() {
             />
           </div>
           
-          <div className="stats-sub-container">
-            {visitorNumber && (
+          {visitorNumber && (
+            <div className="stats-sub-container">
               <div className="stat-sub-item">
                 <div className="stat-sub-label">You are visitor</div>
                 <div className="stat-sub-value">#{visitorNumber.toLocaleString()}</div>
               </div>
-            )}
-            <div className="stat-sub-item">
-              <div className="stat-sub-label">Songs Recommended</div>
-              <div className="stat-sub-value">{totalSongs.toLocaleString()}</div>
             </div>
-          </div>
+          )}
         </section>
 
         <section id="about-me" className="content-section">
@@ -472,6 +468,12 @@ export default function HomePage() {
                       Thanks, I'll check it out!
                     </div>
                   )}
+                  
+                  {/* Songs Recommended Count */}
+                  <div className="songs-count-display">
+                    <span className="songs-count-label">Total songs recommended:</span>
+                    <span className="songs-count-value">{totalSongs.toLocaleString()}</span>
+                  </div>
                 </div>
               </div>
             </div>

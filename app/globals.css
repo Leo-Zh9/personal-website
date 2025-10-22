@@ -2105,6 +2105,27 @@ html, body {
   animation: fadeInOut 2s ease;
 }
 
+.songs-count-display {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.songs-count-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+}
+
+.songs-count-value {
+  color: rgba(96, 165, 250, 0.9);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
 @keyframes fadeInOut {
   0% {
     opacity: 0;
