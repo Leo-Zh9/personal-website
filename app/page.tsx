@@ -118,17 +118,17 @@ export default function HomePage() {
   const [visitorNumber, setVisitorNumber] = useState<number | null>(null);
   const [totalVisitors, setTotalVisitors] = useState<number>(0);
   const [totalSongs, setTotalSongs] = useState<number>(0);
-  const hasTrackedVisitor = useRef(false);
+  const trackingInProgress = useRef(false);
 
   // Track visitor on page load (only once per session)
   useEffect(() => {
-    // Prevent double execution in React Strict Mode
-    if (hasTrackedVisitor.current) return;
-    hasTrackedVisitor.current = true;
-    
     const hasTrackedInSession = sessionStorage.getItem('visitorTracked');
     
     const trackVisitor = async () => {
+      // Prevent double execution in React Strict Mode
+      if (trackingInProgress.current) return;
+      trackingInProgress.current = true;
+      
       if (hasTrackedInSession) {
         // Already tracked in this session, just fetch the count
         try {
@@ -140,6 +140,7 @@ export default function HomePage() {
         } catch (err) {
           console.error('Error fetching stats:', err);
         }
+        trackingInProgress.current = false;
         return;
       }
 
@@ -155,6 +156,8 @@ export default function HomePage() {
       } catch (err) {
         console.error('Error tracking visitor:', err);
       }
+      
+      trackingInProgress.current = false;
     };
 
     trackVisitor();
@@ -369,7 +372,7 @@ export default function HomePage() {
         {/* Live Statistics Section */}
         <section id="stats" className="stats-section">
           <div className="stats-main">
-            <div className="stats-main-label">Total Visitors</div>
+            <div className="stats-main-label">Lifetime Visitors</div>
             <CountUp 
               to={totalVisitors}
               from={0}
