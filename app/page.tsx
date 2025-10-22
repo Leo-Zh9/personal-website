@@ -114,6 +114,47 @@ export default function HomePage() {
   const [isContentVisible, setIsContentVisible] = useState(false);
   const [songRecommendation, setSongRecommendation] = useState('');
   const [showSuccessState, setShowSuccessState] = useState(false);
+  const [visitorNumber, setVisitorNumber] = useState<number | null>(null);
+  const [totalVisitors, setTotalVisitors] = useState<number>(0);
+  const [totalSongs, setTotalSongs] = useState<number>(0);
+
+  // Track visitor on page load
+  useEffect(() => {
+    const trackVisitor = async () => {
+      try {
+        const res = await fetch('/api/visitor', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          setVisitorNumber(data.visitorNumber);
+          setTotalVisitors(data.totalVisitors);
+        }
+      } catch (err) {
+        console.error('Error tracking visitor:', err);
+      }
+    };
+
+    trackVisitor();
+  }, []);
+
+  // Fetch stats periodically
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/stats');
+        if (res.ok) {
+          const data = await res.json();
+          setTotalVisitors(data.totalVisitors);
+          setTotalSongs(data.totalSongRecommendations);
+        }
+      } catch (err) {
+        console.error('Error fetching stats:', err);
+      }
+    };
+
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000); // Update every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -201,6 +242,9 @@ export default function HomePage() {
         if (response.ok) {
           setShowSuccessState(true);
           setSongRecommendation('');
+          
+          // Update song count
+          setTotalSongs(prev => prev + 1);
           
           // Hide success state after 2 seconds
           setTimeout(() => {
@@ -518,6 +562,35 @@ export default function HomePage() {
                 )}
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Live Statistics Section */}
+        <section id="stats" className="stats-section">
+          <div className="stats-container">
+            {visitorNumber && (
+              <div className="stat-item highlight-stat">
+                <div className="stat-icon">👋</div>
+                <div className="stat-content">
+                  <div className="stat-label">You are visitor</div>
+                  <div className="stat-value">#{visitorNumber.toLocaleString()}</div>
+                </div>
+              </div>
+            )}
+            <div className="stat-item">
+              <div className="stat-icon">👥</div>
+              <div className="stat-content">
+                <div className="stat-label">Total Visitors</div>
+                <div className="stat-value">{totalVisitors.toLocaleString()}</div>
+              </div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-icon">🎵</div>
+              <div className="stat-content">
+                <div className="stat-label">Songs Recommended</div>
+                <div className="stat-value">{totalSongs.toLocaleString()}</div>
+              </div>
+            </div>
           </div>
         </section>
 

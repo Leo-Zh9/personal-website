@@ -2124,6 +2124,94 @@ html, body {
   }
 }
 
+/* Live Statistics Section */
+.stats-section {
+  padding: 60px 0;
+  margin: 40px 0;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(96, 165, 250, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.1);
+}
+
+.stat-item.highlight-stat {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(167, 139, 250, 0.1));
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.stat-item.highlight-stat:hover {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(167, 139, 250, 0.15));
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  line-height: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: white;
+  line-height: 1;
+}
+
+.highlight-stat .stat-value {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 /* Responsive design for song recommendation section */
 @media (max-width: 768px) {
   .song-form-mini {
@@ -2148,5 +2236,29 @@ html, body {
   .song-success-message {
     font-size: 0.8rem;
     margin-top: 6px;
+  }
+  
+  /* Stats responsive */
+  .stats-container {
+    gap: 15px;
+  }
+  
+  .stat-item {
+    min-width: auto;
+    width: 100%;
+    max-width: 300px;
+    padding: 16px 20px;
+  }
+  
+  .stat-icon {
+    font-size: 1.5rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
   }
 }
