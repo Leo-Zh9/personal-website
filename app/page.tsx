@@ -482,7 +482,7 @@ export default function HomePage() {
                   <FaGithub size={24} /> 
                   <span>GitHub</span>
                 </a>
-                <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer" className="social-link twitter-link">
+                <a href="https://x.com/leozhangzyx" target="_blank" rel="noopener noreferrer" className="social-link twitter-link">
                   <FaTwitter size={24} /> 
                   <span>Twitter/X</span>
                 </a>
