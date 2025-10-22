@@ -57,6 +57,10 @@ export default function CountUp({
 
   useEffect(() => {
     if (isInView) {
+      // First, immediately set to start value
+      motionValue.set(direction === 'down' ? to : from);
+      
+      // Then after delay, animate to end value
       const timeoutId = setTimeout(() => {
         motionValue.set(direction === 'down' ? from : to);
       }, delay * 1000);
@@ -65,8 +69,8 @@ export default function CountUp({
         clearTimeout(timeoutId);
       };
     } else {
-      // Reset to initial value when out of view
-      motionValue.set(direction === 'down' ? to : from);
+      // Reset to initial value when out of view (no animation)
+      motionValue.jump(direction === 'down' ? to : from);
     }
   }, [isInView, motionValue, direction, from, to, delay]);
 
