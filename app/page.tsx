@@ -347,7 +347,6 @@ export default function HomePage() {
           <div className="stats-container">
             {visitorNumber && (
               <div className="stat-item highlight-stat">
-                <div className="stat-icon">👋</div>
                 <div className="stat-content">
                   <div className="stat-label">You are visitor</div>
                   <div className="stat-value">#{visitorNumber.toLocaleString()}</div>
@@ -355,14 +354,12 @@ export default function HomePage() {
               </div>
             )}
             <div className="stat-item">
-              <div className="stat-icon">👥</div>
               <div className="stat-content">
                 <div className="stat-label">Total Visitors</div>
                 <div className="stat-value">{totalVisitors.toLocaleString()}</div>
               </div>
             </div>
             <div className="stat-item">
-              <div className="stat-icon">🎵</div>
               <div className="stat-content">
                 <div className="stat-label">Songs Recommended</div>
                 <div className="stat-value">{totalSongs.toLocaleString()}</div>

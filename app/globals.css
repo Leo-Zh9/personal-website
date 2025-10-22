@@ -2143,7 +2143,7 @@ html, body {
 .stat-item {
   display: flex;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
   padding: 20px 30px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2169,16 +2169,11 @@ html, body {
   border-color: rgba(96, 165, 250, 0.5);
 }
 
-.stat-icon {
-  font-size: 2rem;
-  line-height: 1;
-  animation: pulse 2s ease-in-out infinite;
-}
-
 .stat-content {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  text-align: center;
 }
 
 .stat-label {
@@ -2201,15 +2196,6 @@ html, body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
 }
 
 /* Responsive design for song recommendation section */
@@ -2248,10 +2234,6 @@ html, body {
     width: 100%;
     max-width: 300px;
     padding: 16px 20px;
-  }
-  
-  .stat-icon {
-    font-size: 1.5rem;
   }
   
   .stat-value {
