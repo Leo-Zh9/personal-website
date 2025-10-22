@@ -2029,79 +2029,66 @@ html, body {
   aspect-ratio: 16/9;
 }
 
-/* Song Recommendation Section */
-#song-recommendations {
-  padding: 60px 0;
+/* Song Recommendation Section - Minimalistic */
+.song-recommendation-mini {
+  margin-top: 15px;
+  width: 100%;
 }
 
-.song-recommendation-content {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.song-recommendation-text {
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 300;
-}
-
-.song-recommendation-form {
+.song-form-mini {
   display: flex;
-  gap: 15px;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
-.song-input {
+.song-input-mini {
   flex: 1;
-  min-width: 300px;
-  max-width: 500px;
-  padding: 15px 20px;
-  font-size: 1rem;
+  padding: 10px 14px;
+  font-size: 0.85rem;
   font-family: 'Inter', sans-serif;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   color: white;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   outline: none;
 }
 
-.song-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+.song-input-mini::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.85rem;
 }
 
-.song-input:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(96, 165, 250, 0.6);
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+.song-input-mini:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(96, 165, 250, 0.4);
 }
 
-.song-submit-button {
-  padding: 15px 40px;
-  font-size: 1rem;
-  font-weight: 500;
+.song-submit-mini {
+  padding: 10px 16px;
+  font-size: 1.2rem;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  color: white;
-  border: none;
-  border-radius: 12px;
+  background: rgba(96, 165, 250, 0.15);
+  color: rgba(96, 165, 250, 0.9);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
 }
 
-.song-submit-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(96, 165, 250, 0.4);
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+.song-submit-mini:hover {
+  background: rgba(96, 165, 250, 0.25);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: rgba(96, 165, 250, 1);
 }
 
-.song-submit-button:active {
-  transform: translateY(0);
+.song-submit-mini:active {
+  transform: scale(0.95);
 }
 
 /* Thank You Popup */
@@ -2158,18 +2145,23 @@ html, body {
 
 /* Responsive design for song recommendation section */
 @media (max-width: 768px) {
-  .song-recommendation-form {
-    flex-direction: column;
-    width: 100%;
+  .song-form-mini {
+    gap: 6px;
   }
   
-  .song-input {
-    width: 100%;
-    min-width: auto;
+  .song-input-mini {
+    font-size: 0.8rem;
+    padding: 8px 12px;
   }
   
-  .song-submit-button {
-    width: 100%;
+  .song-input-mini::placeholder {
+    font-size: 0.8rem;
+  }
+  
+  .song-submit-mini {
+    padding: 8px 14px;
+    font-size: 1.1rem;
+    min-width: 40px;
   }
   
   .thank-you-popup-content {

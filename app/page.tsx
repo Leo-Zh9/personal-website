@@ -334,6 +334,23 @@ export default function HomePage() {
               {/* Spotify section as separate element */}
               <div className="spotify-section">
                 <div id="spotify-container">{trackDetailsContent}</div>
+                
+                {/* Song Recommendation - Minimalistic */}
+                <div className="song-recommendation-mini">
+                  <form onSubmit={handleSongSubmit} className="song-form-mini">
+                    <input
+                      type="text"
+                      value={songRecommendation}
+                      onChange={(e) => setSongRecommendation(e.target.value)}
+                      placeholder="Recommend me a song..."
+                      className="song-input-mini"
+                      maxLength={200}
+                    />
+                    <button type="submit" className="song-submit-mini">
+                      →
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -548,43 +565,18 @@ export default function HomePage() {
         {/* Connect section divider */}
         <div className="connect-divider"></div>
         
-        {/* Song Recommendation Section */}
-        <section id="song-recommendations" className="content-section">
-          <h2 className="section-title">Recommend Me a Song 🎵</h2>
-          
-          <div className="song-recommendation-content">
-            <p className="song-recommendation-text">
-              I love discovering new music! Drop your favorite song below and I'll check it out.
-            </p>
-            
-            <form onSubmit={handleSongSubmit} className="song-recommendation-form">
-              <input
-                type="text"
-                value={songRecommendation}
-                onChange={(e) => setSongRecommendation(e.target.value)}
-                placeholder="Song name or artist..."
-                className="song-input"
-                maxLength={200}
-              />
-              <button type="submit" className="song-submit-button">
-                Submit
-              </button>
-            </form>
-          </div>
-        </section>
-        
-        {/* Thank You Popup */}
-        {showThankYouPopup && (
-          <div className="thank-you-popup">
-            <div className="thank-you-popup-content">
-              <p>Thanks for the recommendation, I'll check this out!</p>
-            </div>
-          </div>
-        )}
-        
         {/* Final white line */}
         <div className="final-divider"></div>
       </main>
+      
+      {/* Thank You Popup */}
+      {showThankYouPopup && (
+        <div className="thank-you-popup">
+          <div className="thank-you-popup-content">
+            <p>Thanks for the recommendation, I'll check this out!</p>
+          </div>
+        </div>
+      )}
       </div>
     </>
   );
