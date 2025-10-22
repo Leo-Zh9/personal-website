@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Head from "next/head";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -118,13 +118,18 @@ export default function HomePage() {
   const [visitorNumber, setVisitorNumber] = useState<number | null>(null);
   const [totalVisitors, setTotalVisitors] = useState<number>(0);
   const [totalSongs, setTotalSongs] = useState<number>(0);
+  const hasTrackedVisitor = useRef(false);
 
   // Track visitor on page load (only once per session)
   useEffect(() => {
-    const hasTrackedVisitor = sessionStorage.getItem('visitorTracked');
+    // Prevent double execution in React Strict Mode
+    if (hasTrackedVisitor.current) return;
+    hasTrackedVisitor.current = true;
+    
+    const hasTrackedInSession = sessionStorage.getItem('visitorTracked');
     
     const trackVisitor = async () => {
-      if (hasTrackedVisitor) {
+      if (hasTrackedInSession) {
         // Already tracked in this session, just fetch the count
         try {
           const res = await fetch('/api/stats');
