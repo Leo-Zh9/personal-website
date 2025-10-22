@@ -112,6 +112,8 @@ export default function HomePage() {
   const { profileData, loading: profileLoading, error: profileError } = useLinkedInProfile();
   const [isLoading, setIsLoading] = useState(true);
   const [isContentVisible, setIsContentVisible] = useState(false);
+  const [songRecommendation, setSongRecommendation] = useState('');
+  const [showThankYouPopup, setShowThankYouPopup] = useState(false);
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -182,6 +184,20 @@ export default function HomePage() {
     };
   }, []);
 
+  // Handle song recommendation submission
+  const handleSongSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (songRecommendation.trim()) {
+      setShowThankYouPopup(true);
+      setSongRecommendation('');
+      
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setShowThankYouPopup(false);
+      }, 3000);
+    }
+  };
+
 
   const trackDetailsContent = track ? (
     <a href={track.songUrl} target="_blank" rel="noopener noreferrer">
@@ -231,7 +247,7 @@ export default function HomePage() {
       <div className={`main-content ${isContentVisible ? 'fade-in' : ''}`}>
         <div id="home-screen-container">
         <BlurText
-          text="welcome, take a look around!"
+          text="welcome to my domain"
           delay={100}
           animateBy="letters"
           direction="top"
@@ -531,6 +547,40 @@ export default function HomePage() {
         
         {/* Connect section divider */}
         <div className="connect-divider"></div>
+        
+        {/* Song Recommendation Section */}
+        <section id="song-recommendations" className="content-section">
+          <h2 className="section-title">Recommend Me a Song 🎵</h2>
+          
+          <div className="song-recommendation-content">
+            <p className="song-recommendation-text">
+              I love discovering new music! Drop your favorite song below and I'll check it out.
+            </p>
+            
+            <form onSubmit={handleSongSubmit} className="song-recommendation-form">
+              <input
+                type="text"
+                value={songRecommendation}
+                onChange={(e) => setSongRecommendation(e.target.value)}
+                placeholder="Song name or artist..."
+                className="song-input"
+                maxLength={200}
+              />
+              <button type="submit" className="song-submit-button">
+                Submit
+              </button>
+            </form>
+          </div>
+        </section>
+        
+        {/* Thank You Popup */}
+        {showThankYouPopup && (
+          <div className="thank-you-popup">
+            <div className="thank-you-popup-content">
+              <p>Thanks for the recommendation, I'll check this out!</p>
+            </div>
+          </div>
+        )}
         
         {/* Final white line */}
         <div className="final-divider"></div>
