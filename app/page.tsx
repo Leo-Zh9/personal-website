@@ -113,7 +113,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isContentVisible, setIsContentVisible] = useState(false);
   const [songRecommendation, setSongRecommendation] = useState('');
-  const [showThankYouPopup, setShowThankYouPopup] = useState(false);
+  const [showSuccessState, setShowSuccessState] = useState(false);
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -199,13 +199,13 @@ export default function HomePage() {
         });
         
         if (response.ok) {
-          setShowThankYouPopup(true);
+          setShowSuccessState(true);
           setSongRecommendation('');
           
-          // Hide popup after 3 seconds
+          // Hide success state after 2 seconds
           setTimeout(() => {
-            setShowThankYouPopup(false);
-          }, 3000);
+            setShowSuccessState(false);
+          }, 2000);
         }
       } catch (error) {
         console.error('Error submitting song recommendation:', error);
@@ -228,15 +228,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Thank You Popup - at top level for proper display */}
-      {showThankYouPopup && (
-        <div className="thank-you-popup">
-          <div className="thank-you-popup-content">
-            <p>Thanks for the recommendation, I'll check this out!</p>
-          </div>
-        </div>
-      )}
-      
       {/* Loading Screen */}
       {isLoading && (
         <LoadingScreen onLoadComplete={() => setIsLoading(false)} />
@@ -366,14 +357,22 @@ export default function HomePage() {
                       type="text"
                       value={songRecommendation}
                       onChange={(e) => setSongRecommendation(e.target.value)}
-                      placeholder="Recommend me a song..."
+                      placeholder="Recommend a song!"
                       className="song-input-mini"
                       maxLength={200}
                     />
-                    <button type="submit" className="song-submit-mini">
-                      →
+                    <button 
+                      type="submit" 
+                      className={`song-submit-mini ${showSuccessState ? 'success' : ''}`}
+                    >
+                      {showSuccessState ? '✓' : '→'}
                     </button>
                   </form>
+                  {showSuccessState && (
+                    <div className="song-success-message">
+                      Thanks, I'll check it out!
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
