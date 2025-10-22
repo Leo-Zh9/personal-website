@@ -342,6 +342,35 @@ export default function HomePage() {
       </div>
 
       <main id="scrollable-content">
+        {/* Live Statistics Section */}
+        <section id="stats" className="stats-section">
+          <div className="stats-container">
+            {visitorNumber && (
+              <div className="stat-item highlight-stat">
+                <div className="stat-icon">👋</div>
+                <div className="stat-content">
+                  <div className="stat-label">You are visitor</div>
+                  <div className="stat-value">#{visitorNumber.toLocaleString()}</div>
+                </div>
+              </div>
+            )}
+            <div className="stat-item">
+              <div className="stat-icon">👥</div>
+              <div className="stat-content">
+                <div className="stat-label">Total Visitors</div>
+                <div className="stat-value">{totalVisitors.toLocaleString()}</div>
+              </div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-icon">🎵</div>
+              <div className="stat-content">
+                <div className="stat-label">Songs Recommended</div>
+                <div className="stat-value">{totalSongs.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="about-me" className="content-section">
           <h2 className="section-title">About Me</h2>
           
@@ -562,35 +591,6 @@ export default function HomePage() {
                 )}
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Live Statistics Section */}
-        <section id="stats" className="stats-section">
-          <div className="stats-container">
-            {visitorNumber && (
-              <div className="stat-item highlight-stat">
-                <div className="stat-icon">👋</div>
-                <div className="stat-content">
-                  <div className="stat-label">You are visitor</div>
-                  <div className="stat-value">#{visitorNumber.toLocaleString()}</div>
-                </div>
-              </div>
-            )}
-            <div className="stat-item">
-              <div className="stat-icon">👥</div>
-              <div className="stat-content">
-                <div className="stat-label">Total Visitors</div>
-                <div className="stat-value">{totalVisitors.toLocaleString()}</div>
-              </div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-icon">🎵</div>
-              <div className="stat-content">
-                <div className="stat-label">Songs Recommended</div>
-                <div className="stat-value">{totalSongs.toLocaleString()}</div>
-              </div>
-            </div>
           </div>
         </section>
 
