@@ -1,73 +1,95 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useInView, useMotionValue, useSpring } from 'motion/react';
 
 interface CountUpProps {
-  end: number;
+  to: number;
+  from?: number;
+  direction?: 'up' | 'down';
+  delay?: number;
   duration?: number;
   className?: string;
+  separator?: string;
 }
 
-export default function CountUp({ end, duration = 2000, className = '' }: CountUpProps) {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const countRef = useRef<HTMLDivElement>(null);
+export default function CountUp({
+  to,
+  from = 0,
+  direction = 'up',
+  delay = 0,
+  duration = 2,
+  className = '',
+  separator = ','
+}: CountUpProps) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const motionValue = useMotionValue(direction === 'down' ? to : from);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            setIsVisible(true);
-            setHasAnimated(true);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+  const damping = 20 + 40 * (1 / duration);
+  const stiffness = 100 * (1 / duration);
 
-    if (countRef.current) {
-      observer.observe(countRef.current);
+  const springValue = useSpring(motionValue, {
+    damping,
+    stiffness
+  });
+
+  // Change once: true to once: false so it animates every time it comes into view
+  const isInView = useInView(ref, { once: false, margin: '0px' });
+
+  const getDecimalPlaces = (num: number): number => {
+    const str = num.toString();
+    if (str.includes('.')) {
+      const decimals = str.split('.')[1];
+      if (parseInt(decimals) !== 0) {
+        return decimals.length;
+      }
     }
+    return 0;
+  };
 
-    return () => {
-      if (countRef.current) {
-        observer.unobserve(countRef.current);
-      }
-    };
-  }, [hasAnimated]);
+  const maxDecimals = Math.max(getDecimalPlaces(from), getDecimalPlaces(to));
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (ref.current) {
+      ref.current.textContent = String(direction === 'down' ? to : from);
+    }
+  }, [from, to, direction]);
 
-    let startTime: number | null = null;
-    const startValue = 0;
+  useEffect(() => {
+    if (isInView) {
+      const timeoutId = setTimeout(() => {
+        motionValue.set(direction === 'down' ? from : to);
+      }, delay * 1000);
 
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    } else {
+      // Reset to initial value when out of view
+      motionValue.set(direction === 'down' ? to : from);
+    }
+  }, [isInView, motionValue, direction, from, to, delay]);
 
-      // Easing function for smooth animation (easeOutExpo)
-      const easeOutExpo = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      
-      const currentCount = Math.floor(startValue + (end - startValue) * easeOutExpo);
-      setCount(currentCount);
+  useEffect(() => {
+    const unsubscribe = springValue.on('change', latest => {
+      if (ref.current) {
+        const hasDecimals = maxDecimals > 0;
 
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setCount(end);
+        const options: Intl.NumberFormatOptions = {
+          useGrouping: !!separator,
+          minimumFractionDigits: hasDecimals ? maxDecimals : 0,
+          maximumFractionDigits: hasDecimals ? maxDecimals : 0
+        };
+
+        const formattedNumber = Intl.NumberFormat('en-US', options).format(latest);
+
+        ref.current.textContent = separator ? formattedNumber.replace(/,/g, separator) : formattedNumber;
       }
-    };
+    });
 
-    requestAnimationFrame(animate);
-  }, [isVisible, end, duration]);
+    return () => unsubscribe();
+  }, [springValue, separator, maxDecimals]);
 
-  return (
-    <div ref={countRef} className={className}>
-      {count.toLocaleString()}
-    </div>
-  );
+  return <span className={className} ref={ref} />;
 }
 
