@@ -2181,6 +2181,14 @@ html, body {
   animation: gradientShift 3s ease infinite;
 }
 
+.stats-powered-by {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 300;
+  font-style: italic;
+}
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;

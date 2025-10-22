@@ -115,52 +115,25 @@ export default function HomePage() {
   const [isContentVisible, setIsContentVisible] = useState(false);
   const [songRecommendation, setSongRecommendation] = useState('');
   const [showSuccessState, setShowSuccessState] = useState(false);
-  const [visitorNumber, setVisitorNumber] = useState<number | null>(null);
   const [totalVisitors, setTotalVisitors] = useState<number>(0);
   const [totalSongs, setTotalSongs] = useState<number>(0);
-  const trackingInProgress = useRef(false);
 
-  // Track visitor on page load (only once per session)
+  // Fetch stats from Vercel Analytics on page load
   useEffect(() => {
-    const hasTrackedInSession = sessionStorage.getItem('visitorTracked');
-    
-    const trackVisitor = async () => {
-      // Prevent double execution in React Strict Mode
-      if (trackingInProgress.current) return;
-      trackingInProgress.current = true;
-      
-      if (hasTrackedInSession) {
-        // Already tracked in this session, just fetch the count
-        try {
-          const res = await fetch('/api/stats');
-          if (res.ok) {
-            const data = await res.json();
-            setTotalVisitors(data.totalVisitors);
-          }
-        } catch (err) {
-          console.error('Error fetching stats:', err);
-        }
-        trackingInProgress.current = false;
-        return;
-      }
-
+    const fetchInitialStats = async () => {
       try {
-        const res = await fetch('/api/visitor', { method: 'POST' });
+        const res = await fetch('/api/stats');
         if (res.ok) {
           const data = await res.json();
-          setVisitorNumber(data.visitorNumber);
           setTotalVisitors(data.totalVisitors);
-          // Mark as tracked in this session
-          sessionStorage.setItem('visitorTracked', 'true');
+          setTotalSongs(data.totalSongRecommendations);
         }
       } catch (err) {
-        console.error('Error tracking visitor:', err);
+        console.error('Error fetching stats:', err);
       }
-      
-      trackingInProgress.current = false;
     };
 
-    trackVisitor();
+    fetchInitialStats();
   }, []);
 
   // Fetch stats periodically
@@ -372,7 +345,7 @@ export default function HomePage() {
         {/* Live Statistics Section */}
         <section id="stats" className="stats-section">
           <div className="stats-main">
-            <div className="stats-main-label">Lifetime Visitors</div>
+            <div className="stats-main-label">Total Pageviews</div>
             <CountUp 
               to={totalVisitors}
               from={0}
@@ -381,16 +354,8 @@ export default function HomePage() {
               separator=","
               className="stats-main-value"
             />
+            <div className="stats-powered-by">Powered by Vercel Analytics</div>
           </div>
-          
-          {visitorNumber && (
-            <div className="stats-sub-container">
-              <div className="stat-sub-item">
-                <div className="stat-sub-label">You are visitor</div>
-                <div className="stat-sub-value">#{visitorNumber.toLocaleString()}</div>
-              </div>
-            </div>
-          )}
         </section>
 
         <section id="about-me" className="content-section">
