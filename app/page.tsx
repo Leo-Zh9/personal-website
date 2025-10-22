@@ -348,8 +348,10 @@ export default function HomePage() {
           <div className="stats-main">
             <div className="stats-main-label">Total Visitors</div>
             <CountUp 
-              to={totalVisitors} 
-              duration={2.5}
+              to={totalVisitors}
+              from={0}
+              duration={2}
+              delay={0.5}
               separator=","
               className="stats-main-value"
             />
