@@ -8,7 +8,7 @@ export async function GET() {
     const db = client.db('personalWebsite');
     
     // Get visitor count
-    const visitorsCollection = db.collection('visitors');
+    const visitorsCollection = db.collection<{ _id: string; count: number }>('visitors');
     const visitorCounter = await visitorsCollection.findOne({ _id: 'visitorCounter' });
     const totalVisitors = visitorCounter?.count || 0;
     

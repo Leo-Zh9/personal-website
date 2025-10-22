@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     // Connect to MongoDB
     const client = await clientPromise;
     const db = client.db('personalWebsite');
-    const collection = db.collection('visitors');
+    const collection = db.collection<{ _id: string; count: number; lastVisit: Date }>('visitors');
     
     // Increment the visitor count and return the new count
     const result = await collection.findOneAndUpdate(
@@ -46,7 +46,7 @@ export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db('personalWebsite');
-    const collection = db.collection('visitors');
+    const collection = db.collection<{ _id: string; count: number }>('visitors');
     
     const counter = await collection.findOne({ _id: 'visitorCounter' });
     const totalVisitors = counter?.count || 0;
