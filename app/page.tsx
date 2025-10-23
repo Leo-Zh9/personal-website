@@ -52,13 +52,22 @@ interface Project {
 // Add projects here
 const projects: Project[] = [
   {
+    title: "Personal Website",
+    description: "A performant, modern portfolio website built with Next.js and TypeScript, featuring real-time Spotify integration, dynamic content delivery, and an elegant minimalist design. The site showcases projects, experience, and includes interactive features like live music tracking and song recommendations, all optimized for performance with a 95+ Lighthouse score.",
+    period: "September 2025 – Present",
+    githubUrl: "https://github.com/Leo-Zh9/Personal-Website",
+    context: "A fully responsive, mobile-web-app-capable portfolio designed to showcase my work and skills. Features include live Spotify API integration with OAuth 2.0, global CDN distribution via CloudFront, and automated deployment pipelines for seamless updates.",
+    techStack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "AWS S3", "CloudFront", "MDX", "Spotify API", "OAuth 2.0"],
+    screenshot: IMAGE_URLS.websiteScreenshot
+  },
+  {
     title: "Bridgette",
     description: "A data integration platform that seamlessly unifies multiple bank datasets—regardless of format or schema—into one clean, actionable spreadsheet. Bridgette uses AI-powered schema mapping to automatically detect data types and headers, handling .json, .csv, and .xlsx files from different organizations while ensuring data integrity and completeness.",
     period: "October 2025",
     githubUrl: "https://github.com/Leo-Zh9/bridgette",
     devpostUrl: "https://devpost.com/software/bridgette",
     context: "Built for the EY Canada - Data Integration Challenge during Hack the Valley X. This solution addresses the critical need for financial institutions to consolidate disparate data sources into unified, actionable insights.",
-    techStack: ["Python", "Flask", "React", "OpenAI API", "Pandas", "Docker", "JavaScript", "HTML", "CSS"],
+    techStack: ["Flask", "PostgreSQL", "Python", "React", "Docker", "Tailwind CSS", "TypeScript", "OpenAI API"],
     screenshot: IMAGE_URLS.bridgette
   },
   {
@@ -68,7 +77,7 @@ const projects: Project[] = [
     githubUrl: "https://github.com/austinjiann/Preppin",
     devpostUrl: "https://devpost.com/software/preppin",
     context: "Built during StarterHacks 2024 hackathon - a 24-hour coding competition focused on solving real-world problems through innovative technology solutions.",
-    techStack: ["Python", "Flask", "JavaScript", "HTML", "CSS", "OpenAI API", "Tesseract OCR"],
+    techStack: ["Flask", "React", "OpenAI API", "Python", "Tesseract OCR", "OpenCV", "Firebase Auth", "Agile"],
     screenshot: IMAGE_URLS.preppin
   },
   // Add more projects here
@@ -83,7 +92,7 @@ const experiences: Experience[] = [
     period: "May 2025 – August 2025",
     description: "Incendium Academy is a non-profit that empowers students to explore entrepreneurship and technology through real-world projects. During my internship, I built and optimized web applications, automated workflows, and contributed to the development of scalable digital platforms. I implemented technical solutions that streamlined operations, improved user engagement, and supported the launch of student-driven initiatives.",
     screenshot: IMAGE_URLS.incendiumAcademy,
-    techStack: ["JavaScript", "Python", "HTML", "CSS"]
+    techStack: ["Next.js", "Flask", "PostgreSQL", "Python", "React", "Chart.js", "PyTest", "Jest", "Docker", "Git", "CI/CD", "Agile"]
   },
   // Add more experiences here
 ]; 
@@ -275,7 +284,7 @@ export default function HomePage() {
           </span>
         </h1>
         <p className="main-subtitle">
-          Systems Design · Waterloo
+          Systems Design Engineering · University of Waterloo
         </p>
         
         {/* Quick Action Buttons */}
@@ -598,7 +607,7 @@ export default function HomePage() {
         
         {/* Footer with last updated */}
         <footer className="site-footer">
-          <p className="last-updated">Last updated: October 2025</p>
+          <p className="last-updated">Last updated: October 23, 2025</p>
         </footer>
       </main>
     </>

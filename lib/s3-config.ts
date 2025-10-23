@@ -20,5 +20,6 @@ export const IMAGE_URLS = {
   incendiumAcademy: `${S3_BUCKET_URL}/incendium-academy.png`,
   propellerHat: `${S3_BUCKET_URL}/propeller-hat.png`,
   spotifyWrapped: `${S3_BUCKET_URL}/spotify-wrapped.JPG`,
+  websiteScreenshot: `${S3_BUCKET_URL}/websiteafter.png`,
   resume: `${S3_BUCKET_URL}/Resume+(2).pdf`,
 };
