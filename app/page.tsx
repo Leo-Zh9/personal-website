@@ -245,7 +245,7 @@ export default function HomePage() {
           <a href="#projects" className="hero-btn hero-btn-primary">
             <span>View Projects</span>
           </a>
-          <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(1).pdf" target="_blank" rel="noopener noreferrer" className="hero-btn">
+          <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf" target="_blank" rel="noopener noreferrer" className="hero-btn">
             <span>Download Resume</span>
           </a>
         </div>
@@ -511,7 +511,7 @@ export default function HomePage() {
                   <FaTwitter size={24} /> 
                   <span>Twitter/X</span>
                 </a>
-                <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(1).pdf" target="_blank" rel="noopener noreferrer" className="social-link resume-link">
+                <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf" target="_blank" rel="noopener noreferrer" className="social-link resume-link">
                   <span>📄 Resume</span>
                 </a>
               </div>

@@ -8,7 +8,7 @@ const navItems = [
   { name: 'Projects', href: '#projects' },
   { name: 'Experience', href: '#experiences' },
   { name: 'Connect', href: '#connect' },
-  { name: 'Resume', href: 'https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(1).pdf' },
+  { name: 'Resume', href: 'https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf' },
 ];
 
 const Header: FC = () => {
