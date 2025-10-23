@@ -1833,6 +1833,11 @@ a,
     margin-bottom: 3rem;
   }
 
+  /* Hero subtitle mobile centering */
+  .main-subtitle {
+    text-align: center;
+  }
+
   /* About Me Section Mobile Optimization */
   #about-me .content-wrapper {
     padding: 0 1rem;
