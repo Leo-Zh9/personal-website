@@ -19,6 +19,14 @@ interface Track {
   isPlaying: boolean;
 }
 
+interface RecentlyPlayedTrack {
+  title: string;
+  artist: string;
+  playedAt: string;
+  albumImageUrl: string;
+  songUrl: string;
+}
+
 interface Experience {
   title: string;
   company: string;
@@ -98,6 +106,7 @@ const techLogos = [
 
 export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
+  const [recentlyPlayed, setRecentlyPlayed] = useState<RecentlyPlayedTrack[]>([]);
   const { profileData, loading: profileLoading, error: profileError } = useLinkedInProfile();
   const [songRecommendation, setSongRecommendation] = useState('');
   const [showSuccessState, setShowSuccessState] = useState(false);
@@ -139,6 +148,35 @@ export default function HomePage() {
     const interval = setInterval(fetchTrack, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  // Fetch recently played tracks
+  useEffect(() => {
+    const fetchRecentlyPlayed = async () => {
+      try {
+        const res = await fetch(`/api/recently-played`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        setRecentlyPlayed(data.tracks || []);
+      } catch (err) {
+        console.error('Error fetching recently played:', err);
+        setRecentlyPlayed([]);
+      }
+    };
+
+    fetchRecentlyPlayed();
+    const interval = setInterval(fetchRecentlyPlayed, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Format timestamp to time
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
 
   // Handle song recommendation submission
   const handleSongSubmit = async (e: React.FormEvent) => {
@@ -290,7 +328,7 @@ export default function HomePage() {
                 </FadeContent>
               </div>
               
-              {/* Spotify section as separate element */}
+              {/* Spotify section */}
               <div className="spotify-section">
                 <div id="spotify-container">{trackDetailsContent}</div>
                 
@@ -322,6 +360,39 @@ export default function HomePage() {
                   <div className="songs-count-display">
                     <span className="songs-count-label">Total songs recommended:</span>
                     <span className="songs-count-value">{totalSongs.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Recently Played Tracks */}
+              <div className="recently-played-section">
+                <div className="recently-played-container">
+                  <h3 className="recently-played-title">Recently Played</h3>
+                  <div className="recently-played-list">
+                    {recentlyPlayed.length > 0 ? (
+                      recentlyPlayed.map((track, index) => (
+                        <a 
+                          key={index}
+                          href={track.songUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="recently-played-item"
+                        >
+                          <img 
+                            src={track.albumImageUrl} 
+                            alt={`${track.title} album cover`}
+                            className="recently-played-image"
+                          />
+                          <div className="recently-played-info">
+                            <span className="recently-played-track">
+                              {track.title} - {track.artist} - {formatTime(track.playedAt)}
+                            </span>
+                          </div>
+                        </a>
+                      ))
+                    ) : (
+                      <div className="recently-played-empty">No recent tracks</div>
+                    )}
                   </div>
                 </div>
               </div>
