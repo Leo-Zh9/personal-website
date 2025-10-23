@@ -289,11 +289,27 @@ export default function HomePage() {
         
         {/* Quick Action Buttons */}
         <div className="hero-actions">
-          <a href="#projects" className="hero-btn hero-btn-primary">
-            <span>View Projects</span>
+          <a href="#experiences" className="hero-btn hero-btn-primary">
+            <span>View Experience</span>
           </a>
           <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf" target="_blank" rel="noopener noreferrer" className="hero-btn">
             <span>Download Resume</span>
+          </a>
+        </div>
+        
+        {/* Social Links */}
+        <div className="hero-social-links">
+          <a href="https://www.linkedin.com/in/leozhang99" target="_blank" rel="noopener noreferrer" className="hero-social-link linkedin-link">
+            <FaLinkedin size={20} /> 
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://github.com/Leo-Zh9" target="_blank" rel="noopener noreferrer" className="hero-social-link github-link">
+            <FaGithub size={20} /> 
+            <span>GitHub</span>
+          </a>
+          <a href="https://x.com/leozhangzyx" target="_blank" rel="noopener noreferrer" className="hero-social-link twitter-link">
+            <FaTwitter size={20} /> 
+            <span>Twitter/X</span>
           </a>
         </div>
         
@@ -409,7 +425,73 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="projects" className="content-section" data-section="02 / Projects">
+        <section id="experiences" className="content-section" data-section="02 / Experience">
+          <div className="section-divider"></div>
+          <h2 className="section-title">
+            {'Experience'.split('').map((letter, index) => (
+              <span key={index} className="section-letter">
+                {letter}
+              </span>
+            ))}
+          </h2>
+
+          <div className="content-wrapper">
+            <div className="experience-list">
+            {experiences.map((exp, index) => (
+              <div key={index} className="experience-item">
+                {/* Left: Text */}
+                <div className="experience-text">
+                  <h3 className="experience-title">
+                    {exp.title} @{" "}
+                    {exp.companyUrl ? (
+                      <a
+                        href={exp.companyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="experience-company-link"
+                      >
+                        {exp.company}
+                      </a>
+                    ) : (
+                      exp.company
+                    )}
+                  </h3>
+                  <p className="experience-period">{exp.period}</p>
+                  <p className="experience-description">
+                    {exp.description}
+                    {exp.techStack && (
+                      <span className="experience-tech-stack">
+                        {" "}<em>{exp.techStack.join(" • ")}</em>
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Right: Screenshot */}
+                {exp.screenshot && (
+                  <div className="experience-image-container">
+                    <a
+                      href={exp.companyUrl || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Image
+                        src={exp.screenshot}
+                        alt={`${exp.company} homepage screenshot`}
+                        width={300}
+                        height={200}
+                        className="experience-image"
+                      />
+                    </a>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          </div>
+        </section>
+
+        <section id="projects" className="content-section" data-section="03 / Projects">
           <div className="section-divider"></div>
           <h2 className="section-title">
             {'Projects'.split('').map((letter, index) => (
@@ -496,114 +578,6 @@ export default function HomePage() {
             style={{ height: '80px', margin: '20px 0' }}
           />
         </div>
-
-        <section id="experiences" className="content-section" data-section="03 / Experience">
-          <div className="section-divider"></div>
-          <h2 className="section-title">
-            {'Experience'.split('').map((letter, index) => (
-              <span key={index} className="section-letter">
-                {letter}
-              </span>
-            ))}
-          </h2>
-
-          <div className="content-wrapper">
-            <div className="experience-list">
-            {experiences.map((exp, index) => (
-              <div key={index} className="experience-item">
-                {/* Left: Text */}
-                <div className="experience-text">
-                  <h3 className="experience-title">
-                    {exp.title} @{" "}
-                    {exp.companyUrl ? (
-                      <a
-                        href={exp.companyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="experience-company-link"
-                      >
-                        {exp.company}
-                      </a>
-                    ) : (
-                      exp.company
-                    )}
-                  </h3>
-                  <p className="experience-period">{exp.period}</p>
-                  <p className="experience-description">
-                    {exp.description}
-                    {exp.techStack && (
-                      <span className="experience-tech-stack">
-                        {" "}<em>{exp.techStack.join(" • ")}</em>
-                      </span>
-                    )}
-                  </p>
-                </div>
-
-                {/* Right: Screenshot */}
-                {exp.screenshot && (
-                  <div className="experience-image-container">
-                    <a
-                      href={exp.companyUrl || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Image
-                        src={exp.screenshot}
-                        alt={`${exp.company} homepage screenshot`}
-                        width={300}
-                        height={200}
-                        className="experience-image"
-                      />
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          </div>
-        </section>
-
-        <section id="connect" className="content-section" data-section="04 / Connect">
-          <div className="section-divider"></div>
-          <h2 className="section-title">
-            {'Connect'.split('').map((letter, index) => (
-              <span key={index} className="section-letter">
-                {letter}
-              </span>
-            ))}
-          </h2>
-          
-          <div className="content-wrapper">
-            <div className="connect-content-centered">
-              <p className="connect-intro"><strong>Let's connect!</strong></p>
-              <p className="connect-description">I'm always interested in meeting new people and exploring opportunities in technology and engineering.</p>
-              
-              <div className="social-links">
-                <a href="https://www.linkedin.com/in/leozhang99" target="_blank" rel="noopener noreferrer" className="social-link linkedin-link">
-                  <FaLinkedin size={24} /> 
-                  <span>LinkedIn</span>
-                </a>
-                <a href="https://github.com/Leo-Zh9" target="_blank" rel="noopener noreferrer" className="social-link github-link">
-                  <FaGithub size={24} /> 
-                  <span>GitHub</span>
-                </a>
-                <a href="https://x.com/leozhangzyx" target="_blank" rel="noopener noreferrer" className="social-link twitter-link">
-                  <FaTwitter size={24} /> 
-                  <span>Twitter/X</span>
-                </a>
-                <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf" target="_blank" rel="noopener noreferrer" className="social-link resume-link">
-                  <span>📄 Resume</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* Connect section divider */}
-        <div className="connect-divider"></div>
-        
-        {/* Final white line */}
-        <div className="final-divider"></div>
         
         {/* Footer with last updated */}
         <footer className="site-footer">

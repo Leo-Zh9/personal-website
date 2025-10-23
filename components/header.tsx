@@ -5,9 +5,8 @@ import { FC, useState, useEffect } from 'react';
 
 const navItems = [
   { name: 'About', href: '#about-me' },
-  { name: 'Projects', href: '#projects' },
   { name: 'Experience', href: '#experiences' },
-  { name: 'Connect', href: '#connect' },
+  { name: 'Projects', href: '#projects' },
   { name: 'Resume', href: 'https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf' },
 ];
 
