@@ -434,24 +434,43 @@ h1, h2, h3, h4, h5, h6 {
    MOBILE COMPATIBILITY ENHANCEMENTS
    ============================================ */
 
-/* Prevent horizontal scroll on mobile */
-html, body {
-  overflow-x: hidden;
-  max-width: 100%;
+/* CRITICAL: Only ONE scrollbar for entire page */
+html {
+  overflow-x: hidden !important;
+  overflow-y: scroll !important; /* Always show scrollbar to prevent layout shift */
+  max-width: 100vw !important;
   width: 100%;
+  height: 100%;
+}
+
+body {
+  overflow: hidden !important; /* Body should never scroll */
+  max-width: 100vw !important;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* Prevent ALL child elements from creating scrollbars */
+*:not(html) {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
 /* Ensure all containers don't overflow */
 .content-section,
 #scrollable-content,
 .main-content,
-#home-screen-container {
+#home-screen-container,
+main,
+section,
+div {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: visible !important;
 }
 
 /* Touch-friendly elements */
