@@ -3,23 +3,13 @@
 import { useEffect, useState } from 'react';
 import Head from "next/head";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiJavascript, SiHtml5, SiCss3, SiFlask, SiDocker, SiPandas, SiOpenai } from "react-icons/si";
-import BlurText from "../components/BlurText";
 import FadeContent from "../components/FadeContent";
 import LogoLoop from "../components/LogoLoop";
-import FloatingParticles from "../components/FloatingParticles";
-import LoadingScreen from "../components/LoadingScreen";
 import { IMAGE_URLS } from "../lib/s3-config";
 import { useLinkedInProfile } from "../lib/use-linkedin-profile";
 import { LINKEDIN_CONFIG } from "../lib/linkedin-config";
-
-// Lazy load the heavy Prism component
-const Prism = dynamic(() => import("../components/Prism"), {
-  ssr: false,
-  loading: () => <div style={{ width: '100%', height: '100vh', background: 'linear-gradient(45deg, #1f2937, #374151)' }} />
-});
 
 interface Track {
   title: string;
@@ -108,10 +98,7 @@ const techLogos = [
 
 export default function HomePage() {
   const [track, setTrack] = useState<Track | null>(null);
-  const [sparks, setSparks] = useState<Array<{x: number, y: number, id: number, angle: number, velocity: number}>>([]);
   const { profileData, loading: profileLoading, error: profileError } = useLinkedInProfile();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isContentVisible, setIsContentVisible] = useState(false);
   const [songRecommendation, setSongRecommendation] = useState('');
   const [showSuccessState, setShowSuccessState] = useState(false);
   const [totalSongs, setTotalSongs] = useState<number>(0);
@@ -151,57 +138,6 @@ export default function HomePage() {
     fetchTrack();
     const interval = setInterval(fetchTrack, 10000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Handle loading completion
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // Delay content visibility for smooth transition
-      setTimeout(() => {
-        setIsContentVisible(true);
-      }, 500);
-    }, 3000); // Show loading screen for at least 3 seconds
-
-    return () => clearTimeout(timer);
-  }, []);
-
-
-
-  // Click sparks effect
-  useEffect(() => {
-    let sparkId = 0;
-    
-    const handleClick = (e: MouseEvent) => {
-      const sparkCount = 8;
-      const newSparks: Array<{x: number, y: number, id: number, angle: number, velocity: number}> = [];
-      
-      for (let i = 0; i < sparkCount; i++) {
-        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.5;
-        const velocity = 2 + Math.random() * 3;
-        
-        newSparks.push({
-          x: e.clientX,
-          y: e.clientY,
-          id: sparkId++,
-          angle,
-          velocity
-        });
-      }
-      
-      setSparks(prev => [...prev, ...newSparks]);
-      
-      // Remove sparks after animation
-      setTimeout(() => {
-        setSparks(prev => prev.filter(spark => !newSparks.includes(spark)));
-      }, 1000);
-    };
-
-    document.addEventListener('click', handleClick);
-    
-    return () => {
-      document.removeEventListener('click', handleClick);
-    };
   }, []);
 
   // Handle song recommendation submission
@@ -251,99 +187,84 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Loading Screen */}
-      {isLoading && (
-        <LoadingScreen onLoadComplete={() => setIsLoading(false)} />
-      )}
+      {/* Zen Garden Elements - Interactive Shapes */}
+      <div className="zen-circle zen-circle-1"></div>
+      <div className="zen-circle zen-circle-2"></div>
       
-      {/* Floating Particles Background */}
-      <FloatingParticles 
-        particleCount={40}
-        speed={0.2}
-        size={2}
-        opacity={0.6}
-        colors={['#ffffff', '#60a5fa', '#34d399', '#fbbf24', '#f472b6', '#a78bfa']}
-      />
-      
-      {/* Click Sparks */}
-      <div className="sparks-container">
-        {sparks.map((spark) => (
-          <div
-            key={spark.id}
-            className="spark"
-            style={{
-              left: spark.x,
-              top: spark.y,
-              '--angle': `${spark.angle}rad`,
-              '--velocity': spark.velocity,
-            } as React.CSSProperties & { '--angle': string; '--velocity': number }}
-          />
-        ))}
+      {/* Floating Particles - Emphasized */}
+      <div className="zen-particles">
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
+        <div className="zen-particle"></div>
       </div>
+      
+      {/* Flowing Wave Lines */}
+      <div className="zen-line zen-line-1">
+        <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+          <path d="M 0 50 Q 250 30, 500 50 T 1000 50" />
+        </svg>
+      </div>
+      <div className="zen-line zen-line-2">
+        <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+          <path d="M 0 50 Q 250 70, 500 50 T 1000 50" />
+        </svg>
+      </div>
+      
+      <div className="zen-curve"></div>
 
-      {/* Main Content with Fade-in */}
-      <div className={`main-content ${isContentVisible ? 'fade-in' : ''}`}>
-        <div id="home-screen-container">
-        <BlurText
-          text="welcome to my domain"
-          delay={100}
-          animateBy="letters"
-          direction="top"
-          className="main-title-blur"
-          stepDuration={0.4}
-        />
-
-        {/* Prism Background */}
-        <div style={{ 
-          position: 'absolute', 
-          top: 80, 
-          left: 0, 
-          width: '100%', 
-          height: '100vh', 
-          zIndex: 0 
-        }}>
-          <Prism
-            animationType="rotate"
-            timeScale={0.2}
-            height={3.0}
-            baseWidth={5.5}
-            scale={2.8}
-            hueShift={0}
-            colorFrequency={0.8}
-            noise={-1}
-            glow={0.8}
-            bloom={1}
-            transparent={true}
-            suspendWhenOffscreen={true}
-            reducedMotion={false}
-          />
+      {/* Hero Section */}
+      <div id="home-screen-container">
+        <h1 className="main-title">
+          <span className="title-word">
+            {'Leo'.split('').map((letter, index) => (
+              <span key={index} className="title-letter" style={{ animationDelay: `${index * 0.1}s` }}>
+                {letter}
+              </span>
+            ))}
+          </span>
+          <span className="title-space"> </span>
+          <span className="title-word">
+            {'Zhang'.split('').map((letter, index) => (
+              <span key={index} className="title-letter" style={{ animationDelay: `${(index + 3) * 0.1}s` }}>
+                {letter}
+              </span>
+            ))}
+          </span>
+        </h1>
+        <p className="main-subtitle">
+          Systems Design · Waterloo
+        </p>
+        
+        {/* Quick Action Buttons */}
+        <div className="hero-actions">
+          <a href="#projects" className="hero-btn hero-btn-primary">
+            <span>View Projects</span>
+          </a>
+          <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(1).pdf" target="_blank" rel="noopener noreferrer" className="hero-btn">
+            <span>Download Resume</span>
+          </a>
         </div>
+        
+        <div className="scroll-indicator"></div>
       </div>
 
       <main id="scrollable-content">
-        <section id="about-me" className="content-section">
-          <h2 className="section-title">About Me</h2>
+        <section id="about-me" className="content-section" data-section="01 / About">
+          <h2 className="section-title">
+            {'About Me'.split('').map((letter, index) => (
+              <span key={index} className="section-letter">
+                {letter === ' ' ? '\u00A0' : letter}
+              </span>
+            ))}
+          </h2>
           
-          <div className="about-me-content">
-            <div className="about-me-text">
-              <p><strong>Hey, I'm Leo!</strong></p>
-              
-              <p>I'm currently studying <strong>Systems Design Engineering</strong> at the <strong>University of Waterloo</strong>.</p>
-              
-              <p>I'm passionate about solving complex problems through technology and design, blending software development, AI, and systems thinking to create impactful solutions.</p>
-              
-              <p>My passion for creating started long before I ever wrote a line of code. As a kid, I spent hours building LEGO sets—not just following instructions, but designing my own mechs with moving parts and imagined battles. Those early projects sparked my love for engineering because they were more than play—they were problem-solving, designing, and pushing the limits of what I could build.</p>
-              
-              <p>That same curiosity carried over when I discovered Scratch. Suddenly, I could create not just physical structures, but digital ones. Dragging colorful blocks to make games and animations gave me the same thrill as snapping LEGO bricks together. But it also revealed something bigger: the power to invent without limits. With Scratch, I wasn't confined to a box of parts—I had an infinite canvas.</p>
-              
-              <p>From there, I dove into Python, Java, and C++, constantly chasing that feeling of creation and challenge. I built projects that tested my patience and grit—like a chess engine that took weeks to perfect—but rewarded me with the satisfaction of seeing it "think" on its own. What started as LEGO mechs and Scratch sprites evolved into algorithms, web apps, and prototypes that stretched my imagination further each time.</p>
-              
-              <p>Music has always been a thread in this journey. Whether I'm coding late at night or sketching a new idea, there's a soundtrack in the background. Music fuels my focus, sparks creativity, and keeps me in rhythm when I'm deep in flow. I've come to see coding and engineering the same way: as creative compositions, with structure and logic woven together to form something greater than the sum of its parts.</p>
-              
-              <p>Looking back, it all connects. LEGO sparked the curiosity, Scratch gave me the first tools, and programming gave me the freedom to dream bigger. Today, I carry those passions forward: a love for building, a curiosity for solving problems, and the drive to create things that are as seamless and inspiring as the music I listen to every day.</p>
-            </div>
-            
-            <div className="about-me-right">
+          <div className="content-wrapper">
+            <div className="about-me-centerpiece">
               <div className="about-me-image">
                 <FadeContent 
                   blur={true} 
@@ -408,71 +329,74 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="projects" className="content-section">
-          <h2 className="section-title">Projects</h2>
+        <section id="projects" className="content-section" data-section="02 / Projects">
+          <div className="section-divider"></div>
+          <h2 className="section-title">
+            {'Projects'.split('').map((letter, index) => (
+              <span key={index} className="section-letter">
+                {letter}
+              </span>
+            ))}
+          </h2>
 
-          <div className="project-list">
-            {projects.map((project, index) => (
-              <div key={index} className="project-item">
-                {/* Left: Text */}
-                <div className="project-text">
-                  <h3 className="project-title">
-                    {project.title}
-                  </h3>
-                  <p className="project-period">{project.period}</p>
-                  <p className="project-context">{project.context}</p>
-                  <p className="project-description">
-                    {project.description}
+          <div className="content-wrapper">
+            <div className="project-list">
+              {projects.map((project, index) => (
+                <div key={index} className="project-item">
+                  <div className="project-text">
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-period">{project.period}</p>
+                    <p className="project-context">{project.context}</p>
+                    <p className="project-description">{project.description}</p>
                     {project.techStack && (
                       <span className="project-tech-stack">
-                        {" "}<em>{project.techStack.join(" • ")}</em>
+                        {project.techStack.join(" · ")}
                       </span>
                     )}
-                  </p>
-                </div>
-
-                {/* Right: Screenshot and Links */}
-                <div className="project-right">
-                  {project.screenshot && (
-                    <div className="project-screenshot">
-                      <Image
-                        src={project.screenshot}
-                        alt={`${project.title} screenshot`}
-                        width={450}
-                        height={300}
-                        className="project-image"
-                        loading="lazy"
-                        placeholder="blur"
-                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
-                      />
-                    </div>
-                  )}
+                  </div>
                   
-                  <div className="project-links">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="project-link github-link"
-                      >
-                        <FaGithub size={20} /> GitHub
-                      </a>
+                  <div className="project-right">
+                    {project.screenshot && (
+                      <div className="project-screenshot">
+                        <Image
+                          src={project.screenshot}
+                          alt={`${project.title} screenshot`}
+                          width={600}
+                          height={400}
+                          className="project-image"
+                          loading="lazy"
+                          placeholder="blur"
+                          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+                        />
+                      </div>
                     )}
-                    {project.devpostUrl && (
-                      <a
-                        href={project.devpostUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="project-link devpost-link"
-                      >
-                        <span>Devpost</span>
-                      </a>
-                    )}
+                    
+                    <div className="project-links">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="project-link github-link"
+                        >
+                          <FaGithub size={16} /> <span>GitHub</span>
+                        </a>
+                      )}
+                      {project.devpostUrl && (
+                        <a
+                          href={project.devpostUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="project-link devpost-link"
+                        >
+                          <span>Devpost</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
@@ -493,10 +417,18 @@ export default function HomePage() {
           />
         </div>
 
-        <section id="experiences" className="content-section">
-          <h2 className="section-title">Experiences</h2>
+        <section id="experiences" className="content-section" data-section="03 / Experience">
+          <div className="section-divider"></div>
+          <h2 className="section-title">
+            {'Experience'.split('').map((letter, index) => (
+              <span key={index} className="section-letter">
+                {letter}
+              </span>
+            ))}
+          </h2>
 
-          <div className="experience-list">
+          <div className="content-wrapper">
+            <div className="experience-list">
             {experiences.map((exp, index) => (
               <div key={index} className="experience-item">
                 {/* Left: Text */}
@@ -548,15 +480,23 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+          </div>
         </section>
 
-        <section id="connect" className="content-section">
-          <h2 className="section-title">Connect with Me</h2>
+        <section id="connect" className="content-section" data-section="04 / Connect">
+          <div className="section-divider"></div>
+          <h2 className="section-title">
+            {'Connect'.split('').map((letter, index) => (
+              <span key={index} className="section-letter">
+                {letter}
+              </span>
+            ))}
+          </h2>
           
-          <div className="connect-content">
-            <div className="connect-text">
-              <p><strong>Let's connect!</strong></p>
-              <p>I'm always interested in meeting new people and exploring opportunities in technology and engineering.</p>
+          <div className="content-wrapper">
+            <div className="connect-content-centered">
+              <p className="connect-intro"><strong>Let's connect!</strong></p>
+              <p className="connect-description">I'm always interested in meeting new people and exploring opportunities in technology and engineering.</p>
               
               <div className="social-links">
                 <a href="https://www.linkedin.com/in/leozhang99" target="_blank" rel="noopener noreferrer" className="social-link linkedin-link">
@@ -571,45 +511,10 @@ export default function HomePage() {
                   <FaTwitter size={24} /> 
                   <span>Twitter/X</span>
                 </a>
-                <a href={IMAGE_URLS.resume} target="_blank" rel="noopener noreferrer" className="social-link resume-link">
+                <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(1).pdf" target="_blank" rel="noopener noreferrer" className="social-link resume-link">
                   <span>📄 Resume</span>
                 </a>
               </div>
-            </div>
-            
-            <div className="connect-image">
-              <FadeContent 
-                blur={true} 
-                duration={1200} 
-                easing="ease-out" 
-                initialOpacity={0}
-                delay={300}
-                threshold={0.2}
-              >
-                <div className="linkedin-profile-container">
-                  <Image
-                    src={profileData?.profileImageUrl || LINKEDIN_CONFIG.fallbackImageUrl}
-                    alt="Leo Zhang - LinkedIn Profile"
-                    width={250}
-                    height={250}
-                    className="linkedin-profile-picture"
-                    priority
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  />
-                  <p className="linkedin-caption">
-                    {profileData?.fallback 
-                      ? "Connect with me on LinkedIn!" 
-                      : "Current LinkedIn profile picture - always up to date!"
-                    }
-                  </p>
-                  {profileData?.lastUpdated && LINKEDIN_CONFIG.showUpdateInfo && (
-                    <p className="linkedin-update-info">
-                      Last updated: {new Date(profileData.lastUpdated).toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
-              </FadeContent>
             </div>
           </div>
         </section>
@@ -619,8 +524,12 @@ export default function HomePage() {
         
         {/* Final white line */}
         <div className="final-divider"></div>
+        
+        {/* Footer with last updated */}
+        <footer className="site-footer">
+          <p className="last-updated">Last updated: October 2025</p>
+        </footer>
       </main>
-      </div>
     </>
   );
 }

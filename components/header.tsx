@@ -4,23 +4,22 @@ import Link from 'next/link';
 import { FC, useState, useEffect } from 'react';
 
 const navItems = [
-  { name: 'About Me', href: '#about-me' },
+  { name: 'About', href: '#about-me' },
   { name: 'Projects', href: '#projects' },
-  { name: 'Experiences', href: '#experiences' },
+  { name: 'Experience', href: '#experiences' },
   { name: 'Connect', href: '#connect' },
-  { name: 'Resume', href: '/Leo_Zhang_Resume_External.pdf' },
+  { name: 'Resume', href: 'https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(1).pdf' },
 ];
 
 const Header: FC = () => {
   const [showHeader, setShowHeader] = useState(true);
 
-  // Show header when near top, hide on scroll down
   useEffect(() => {
     let lastScrollY = 0;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setShowHeader(currentScrollY < lastScrollY || currentScrollY < 50); // show if scrolling up or near top
+      setShowHeader(currentScrollY < lastScrollY || currentScrollY < 50);
       lastScrollY = currentScrollY;
     };
 
@@ -28,7 +27,6 @@ const Header: FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Smooth scroll to top function
   const handleScrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     window.scrollTo({
@@ -40,34 +38,25 @@ const Header: FC = () => {
   return (
     <header
       id="main-header"
-      className={`fixed top-0 left-0 w-full z-50 bg-[rgba(19,19,19,0.8)] backdrop-blur-md border-b border-white/10
-        transform transition-transform transition-opacity duration-500 ease-in-out
+      className={`transition-transform transition-opacity duration-500 ease-in-out
         ${showHeader ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}
     >
-      <div
-        id="header-container"
-        className="max-w-[1400px] mx-auto flex justify-between items-center px-6 py-3"
-      >
-        {/* Left: Name / Logo */}
+      <div id="header-container">
         <Link 
           href="#" 
-          className="header-name text-lg font-bold text-white hover:text-gray-300 transition-colors"
+          className="header-name"
           onClick={handleScrollToTop}
         >
-          Leo Zhang
+          LZ
         </Link>
 
-        {/* Right: Navigation Links */}
-        <nav
-          id="header-nav"
-          className="flex flex-1 justify-evenly ml-10"
-        >
+        <nav id="header-nav">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               {...(item.name === 'Resume' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="header-link text-white hover:text-gray-300 transition-colors"
+              className="header-link"
             >
               {item.name}
             </Link>
