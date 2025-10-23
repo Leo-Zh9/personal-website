@@ -36,7 +36,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
   },
-  // Add empty turbopack config to silence Next.js 16 warning
   turbopack: {},
   webpack: (config, { isServer }) => {
     // Optimize bundle size

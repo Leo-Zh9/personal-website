@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Head from "next/head";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -11,7 +11,6 @@ import FadeContent from "../components/FadeContent";
 import LogoLoop from "../components/LogoLoop";
 import FloatingParticles from "../components/FloatingParticles";
 import LoadingScreen from "../components/LoadingScreen";
-import CountUp from "../components/CountUp";
 import { IMAGE_URLS } from "../lib/s3-config";
 import { useLinkedInProfile } from "../lib/use-linkedin-profile";
 import { LINKEDIN_CONFIG } from "../lib/linkedin-config";
@@ -115,35 +114,15 @@ export default function HomePage() {
   const [isContentVisible, setIsContentVisible] = useState(false);
   const [songRecommendation, setSongRecommendation] = useState('');
   const [showSuccessState, setShowSuccessState] = useState(false);
-  const [totalVisitors, setTotalVisitors] = useState<number>(0);
   const [totalSongs, setTotalSongs] = useState<number>(0);
 
-  // Fetch stats from Vercel Analytics on page load
-  useEffect(() => {
-    const fetchInitialStats = async () => {
-      try {
-        const res = await fetch('/api/stats');
-        if (res.ok) {
-          const data = await res.json();
-          setTotalVisitors(data.totalVisitors);
-          setTotalSongs(data.totalSongRecommendations);
-        }
-      } catch (err) {
-        console.error('Error fetching stats:', err);
-      }
-    };
-
-    fetchInitialStats();
-  }, []);
-
-  // Fetch stats periodically
+  // Fetch song recommendation count
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const res = await fetch('/api/stats');
         if (res.ok) {
           const data = await res.json();
-          setTotalVisitors(data.totalVisitors);
           setTotalSongs(data.totalSongRecommendations);
         }
       } catch (err) {
@@ -342,22 +321,6 @@ export default function HomePage() {
       </div>
 
       <main id="scrollable-content">
-        {/* Live Statistics Section */}
-        <section id="stats" className="stats-section">
-          <div className="stats-main">
-            <div className="stats-main-label">Total Pageviews</div>
-            <CountUp 
-              to={totalVisitors}
-              from={0}
-              duration={2}
-              delay={0.5}
-              separator=","
-              className="stats-main-value"
-            />
-            <div className="stats-powered-by">Powered by Vercel Analytics</div>
-          </div>
-        </section>
-
         <section id="about-me" className="content-section">
           <h2 className="section-title">About Me</h2>
           
