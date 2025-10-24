@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import Head from "next/head";
 import Image from "next/image";
-import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
+import { FaMailBulk} from "react-icons/fa";
+import { FaLinkedin, FaXTwitter, FaGithub} from "react-icons/fa6";
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiPython, SiJavascript, SiHtml5, SiCss3, SiFlask, SiDocker, SiPandas, SiOpenai } from "react-icons/si";
 import FadeContent from "../components/FadeContent";
 import LogoLoop from "../components/LogoLoop";
@@ -293,7 +294,7 @@ export default function HomePage() {
             <span>View Experience</span>
           </a>
           <a href="https://leo-zhang-website.s3.us-east-1.amazonaws.com/Resume+(2).pdf" target="_blank" rel="noopener noreferrer" className="hero-btn">
-            <span>Download Resume</span>
+            <span>View<br />Resume</span>
           </a>
         </div>
         
@@ -308,8 +309,12 @@ export default function HomePage() {
             <span>GitHub</span>
           </a>
           <a href="https://x.com/leozhangzyx" target="_blank" rel="noopener noreferrer" className="hero-social-link twitter-link">
-            <FaTwitter size={20} /> 
+            <FaXTwitter size={20} /> 
             <span>Twitter/X</span>
+          </a>
+          <a href="mailto:leo.zhang@outlook.com" className="hero-social-link email-link">
+            <FaMailBulk size={20} /> 
+            <span>Email</span>
           </a>
         </div>
         
